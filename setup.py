@@ -6,7 +6,7 @@ try: from setuptools import setup
 except: from distutils.core import setup
 
 setup(name = 'actin',
-      version = '1.2.2',
+      version = '1.2.3',
       description = 'Activity Indices Calculator',
       url = 'http://github.com/gomesdasilva/actin',
       download_url = 'https://github.com/gomesdasilva/ACTIN/archive/v1.0.tar.gz',
@@ -25,3 +25,7 @@ setup(name = 'actin',
 
 # This runs ACTIN and gives location of config file
 os.system('actin -cfg True')
+
+#import appdirs
+#cfg_dir = appdirs.user_config_dir('ACTIN')
+#os.chmod(cfg_dir, 0o777) # make directory read/write by everyone

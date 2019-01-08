@@ -47,7 +47,7 @@ def sel_order(wave_2d, ln_ctr, ln_win):
 	return order
 
 
-def get_win(wave, flux, ln_ctr, ln_win, ln_c, bandtype, blaze=None, snr=None, err=None, weight=None, norm='npixels'):
+def get_win(wave, flux, ln_ctr, ln_win, bandtype, blaze=None, snr=None, err=None, weight=None, norm='npixels'):
 	"""
 	Calculates the sum of the flux and associated error for a given spectral line.
 
@@ -68,8 +68,6 @@ def get_win(wave, flux, ln_ctr, ln_win, ln_c, bandtype, blaze=None, snr=None, er
 	ln_win : float
 		Bandpass around the line where the flux is to be integrated
 		[angstroms].
-	ln_c : float
-		Constant multiplied to the integrated flux.
 	bandtype : string
 		Function to be used in the integration of flux. If 'sq', uses a square function with limits 'ln_win', if 'tri' a triangular function with full-width-at-half-maximum given by 'ln_win'.
 	blaze : list (optional)
@@ -120,8 +118,18 @@ def get_win(wave, flux, ln_ctr, ln_win, ln_c, bandtype, blaze=None, snr=None, er
 
 	if blaze is not None:
 		order = sel_order(wave, ln_ctr, ln_win)
-		order = order[-1]
-		print("Using order %i" % order)
+
+		# Select order with higher snr:
+		snr_order = []
+		order_order = []
+		for k in range(len(order)):
+			order_order.append(order[k])
+			snr_order.append(snr[order[k]])
+			print('Order = %i' % order[k])
+			print('SNR = %s' % snr[order[k]])
+		i = snr_order.index(max(snr_order))
+		order = np.asarray(order_order[i])
+		print("Selected order = %i" % order)
 
 		wave = np.asarray(wave[order])
 		flux = np.asarray(flux[order])
@@ -148,10 +156,10 @@ def get_win(wave, flux, ln_ctr, ln_win, ln_c, bandtype, blaze=None, snr=None, er
 
 	if flg == 'negFlux':
 		print("*** WARNING: Negative flux detected")
-		print("Fraction of flux with negative values = %s" % frac_neg)
+		print("Fraction of flux with negative values = %.5f" % frac_neg)
 
 	# Computing flux for line parameters
-	f_sum, f_sum_err, bandfunc = func.compute_flux(wave, flux, blaze, ln_ctr, ln_win, ln_c, bandtype=bandtype, weight=weight,norm=norm)
+	f_sum, f_sum_err, bandfunc = func.compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype=bandtype, weight=weight,norm=norm)
 
 	win['sum'] = f_sum
 	win['sum_err'] = f_sum_err

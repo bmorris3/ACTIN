@@ -38,7 +38,7 @@ def frac_pixels(wave, flux, wmin, wmax):
     return flux_win, pixels_win
 
 
-def compute_flux(wave, flux, blaze, ln_ctr, ln_win, ln_c, bandtype, weight=None, norm='npixels'):
+def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, norm='npixels'):
     """
     Calculates the sum of the flux inside a bandpass, using different bandpass functions and weights and taking into account fractions of pixels in the bandpass.
 
@@ -93,22 +93,23 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, ln_c, bandtype, weight=None,
         print("*** ERROR: 'bandtype' (in config file) must be either 'sq' or 'tri' but '%s' was given. The config file path can be found by calling 'actin -cfg True'." % bandtype)
         quit()
 
-    weight_win = frac_pixels(wave, weight, wmin, wmax)[0]
+    weight_win, npixels = frac_pixels(wave, weight, wmin, wmax)
 
     # err = sqrt(flux), var = err**2
-    variance = ln_c * flux_win/blaze_win**2
+    #variance = ln_c * flux_win/blaze_win**2
+    variance = flux_win/blaze_win**2
 
     if norm == 'band':
-        f_sum = ln_c * sum(flux_win_norm * weight_win)/ln_win
+        f_sum = sum(flux_win_norm * weight_win)/ln_win
         f_sum_var = sum(variance * weight_win**2)/ln_win**2
     elif norm == 'npixels':
-        f_sum = ln_c * sum(flux_win_norm * weight_win)/len(weight_win)
-        f_sum_var = sum(variance * weight_win**2)/len(weight_win)**2
+        f_sum = sum(flux_win_norm * weight_win)/npixels
+        f_sum_var = sum(variance * weight_win**2)/npixels**2
     elif norm == 'weight':
-        f_sum = ln_c * sum(flux_win_norm * weight_win)/sum(weight_win)
+        f_sum = sum(flux_win_norm * weight_win)/sum(weight_win)
         f_sum_var = sum(variance * weight_win**2)/sum(weight_win)**2
     elif norm == None:
-        f_sum = ln_c * sum(flux_win_norm * weight_win)
+        f_sum = sum(flux_win_norm * weight_win)
         f_sum_var = sum(variance * weight_win**2)
     else:
         print("*** ERROR: 'norm' option must be either 'band', 'npixels', 'weight', or None, but '%s' was given" % norm)

@@ -30,6 +30,7 @@ import actin_plot_time as plot
 import actin_functions as func
 
 
+
 # Configuration file:
 config_file = os.path.join(path, "config_lines.txt")
 
@@ -285,13 +286,13 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
 
     start_time = time.time()
 
-###
+
     if test:
         calc_index = ("I_CaII", "I_Ha", "I_NaI")
         if test == "e2ds": files = os.path.join(path, "test_files", "HARPS.2003-12-13T06:19:48.371_e2ds_A.fits")
         if test == "s1d": files = os.path.join(path, "test_files", "HARPS.2003-12-13T06:19:48.371_s1d_A.fits")
         if test == "adp": files = os.path.join(path, "test_files", "ADP.2014-09-16T11:04:45.123.fits")
-###
+
 
     if files is None:
         print("*** ERROR: No file(s) specified. File name(s) should be inserted after '-f'.")
@@ -396,7 +397,7 @@ def main():
 
 def get_config():
     """
-    Read configuration file and return its contents
+    Check for existence of ACTIN folder and config file and creates them if not present. Returns the path to the config file.
     """
     cfg_dir = appdirs.user_config_dir('ACTIN')
     if not os.path.exists(cfg_dir):
@@ -412,9 +413,11 @@ def create_user_config(cfg_file):
     """
     Create the user's config file
     """
-    source = pkg_resources.resource_stream(__name__, 'config_lines.txt')
-    with open(cfg_file, 'w') as dest:
-        dest.writelines(source)
+    from shutil import copyfile ###
+    src = pkg_resources.resource_stream(__name__, 'config_lines.txt')
+    copyfile(src.name, cfg_file)
+    #with open(cfg_file, 'w+') as dest:
+    #    dest.writelines(src.name)
 
 
 if __name__ == "__main__":

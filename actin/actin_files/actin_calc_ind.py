@@ -83,9 +83,10 @@ def check_lines(wave, sel_lines):
 		if spec_type == '2d':
 			order = None
 			ln_ctr_orders = []
+			order = []
 			for i in range(len(wave)):
 				if min_wave > wave[i][0] and max_wave < wave[i][-1]:
-					order = i
+					order.append(i)
 				# used to show potencial orders with wavelength range
 				if ln_ctr > wave[i][0] and ln_ctr < wave[i][-1]:
 					ln_ctr_orders.append(i)
@@ -99,7 +100,9 @@ def check_lines(wave, sel_lines):
 					closest_ord = ln_ctr_orders[k]
 					print("\tOrder %i: %.2f-%.2f" % (closest_ord,wave[closest_ord][0],wave[closest_ord][-1]))
 				quit()
-			else: print("Line %s inside spectral order %i" % (ln_id,order))
+			else:
+				for i in range(len(order)):
+					print("Line %s inside spectral order %i" % (ln_id,order[i]))
 	return
 
 
@@ -140,7 +143,6 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixel
 					the index equation. Ex: 'L1', 'L2', etc, for the core
 					lines, and 'R1', 'R2', etc, for reference lines.
 		ln_id		str : Spectral line identification.
-		ln_c		float : Constant to be multilied to the flux of the line.
 		ln_ctr 		float : Wavelength of the line centre [angstroms].
 		ln_win 		float : Bandpass around the line centre to be used in
 					the flux integration [angstroms].
@@ -189,8 +191,10 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixel
 
 	wave = np.asarray(data['wave'])
 	flux = np.asarray(data['flux'])
+
 	if 'blaze' in data.keys(): blaze = np.asarray(data['blaze'])
 	else: blaze = None
+
 	obj = data['obj']
 	date = data['date']
 
@@ -206,7 +210,6 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixel
 	ln_ctr = sel_lines['ln_ctr']
 	ln_win = sel_lines['ln_win']
 	ln_id = sel_lines['ln_id']
-	ln_c = sel_lines['ln_c']
 	ind_var = sel_lines['ind_var']
 	bandtype = sel_lines['bandtype']
 
@@ -222,7 +225,7 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixel
 
 		print("Using %s bandpass" % bandtype[k])
 
-		win = get_win.get_win(wave, flux, ln_ctr[k], ln_win[k], ln_c[k], bandtype[k], blaze=blaze, snr=snr, err=err, weight=weight, norm=norm)
+		win = get_win.get_win(wave, flux, ln_ctr[k], ln_win[k], bandtype[k], blaze=blaze, snr=snr, err=err, weight=weight, norm=norm)
 
 		sel_lines['flux'].append(win['sum'])
 		sel_lines['error'].append(win['sum_err'])
@@ -322,6 +325,7 @@ def calc_ind(sel_lines):
 	index['flg'] = []
 	index['mfrac_neg'] = []
 	index['snr'] = []
+	#index['ln_c'] = [] ###
 
 	print("index\tvalue\terror\t\tsnr\tflag\tmfrac_neg")
 	print("-----\t-----\t-----\t\t---\t----\t---------")
@@ -342,6 +346,8 @@ def calc_ind(sel_lines):
 												if ind_ids[k] == sel_ind[i]]
 		snr = [sel_lines['snr'][k] for k in range(rows) \
 												if ind_ids[k] == sel_ind[i]]
+		ln_c = [sel_lines['ln_c'][k] for k in range(rows) \
+												if ind_ids[k] == sel_ind[i]] ##
 
 		# Maximum fraction of flux with negative values of all lines
 		mfrac_neg = max(frac_neg)
@@ -359,10 +365,10 @@ def calc_ind(sel_lines):
 				quit()
 
 		# Add line variables for numerator or denominator:
-		num = [flux[k] for k in range(len(var)) if 'L' in var[k]]
-		num_err = [err[k] for k in range(len(var)) if 'L' in var[k]]
-		denom = [flux[k] for k in range(len(var)) if 'R' in var[k]]
-		denom_err = [err[k] for k in range(len(var)) if 'R' in var[k]]
+		num = [ln_c[k]*flux[k] for k in range(len(var)) if 'L' in var[k]] ##
+		num_err = [ln_c[k]*err[k] for k in range(len(var)) if 'L' in var[k]] ##
+		denom = [ln_c[k]*flux[k] for k in range(len(var)) if 'R' in var[k]] ##
+		denom_err = [ln_c[k]*err[k] for k in range(len(var)) if 'R' in var[k]] ##
 
 		num = np.asarray(num)
 		denom = np.asarray(denom)
@@ -372,7 +378,7 @@ def calc_ind(sel_lines):
 		ind = sum(num) / sum(denom)
 
 		# Error using propagation of errors for lines and ref lines
-		ind_err = np.sqrt(sum(num_err**2) + ind**2 * sum(denom_err**2))/sum(denom)
+		ind_err = np.sqrt(sum(num_err**2) + ind**2 * sum(denom_err**2)) /sum(denom)
 
 		index['index'].append(sel_ind[i])
 		index['value'].append(ind)
