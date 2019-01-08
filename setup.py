@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os
+import subprocess
 
 try: from setuptools import setup
 except: from distutils.core import setup
@@ -24,8 +24,5 @@ setup(name = 'actin',
 
 
 # This runs ACTIN and gives location of config file
-os.system('actin -cfg True')
-
-#import appdirs
-#cfg_dir = appdirs.user_config_dir('ACTIN')
-#os.chmod(cfg_dir, 0o777) # make directory read/write by everyone
+try: subprocess.call(["actin", "-cfg", "True"])
+except: pass
