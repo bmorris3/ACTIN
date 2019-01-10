@@ -1,4 +1,4 @@
-# ACTIN
+# ACTIN [![DOI](http://joss.theoj.org/papers/10.21105/joss.00667/status.svg)](https://doi.org/10.21105/joss.00667)
 ### Activity Indices Calculator
 
 Reads fits files from HARPS and HARPS-N spectrographs, and rdb tables, and outputs user defined spectral activity indices.
