@@ -163,6 +163,7 @@ def actin_file(file, calc_index, config_file=config_file, save_output=False, lin
         file_type = 'ADP'
     elif ".rdb" in file:
         file_type = 'rdb'
+        files = file ####
     else:
         print("*** ERROR: actin: Cannot recognise file type")
         return

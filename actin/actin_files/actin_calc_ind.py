@@ -54,10 +54,12 @@ def check_lines(wave, sel_lines):
 		min_spec_wave = wave[0][0]
 		max_spec_wave = wave[-1][-1]
 		spec_type = '2d'
-	elif type(wave[0]) is np.float64: # 1d spec
+	elif type(wave[0]) is np.float: # 1d spec
 		min_spec_wave = wave[0]
 		max_spec_wave = wave[-1]
 		spec_type = '1d'
+	else:
+		print("*** ERROR: Spectrum is neither 1d or 2d.")
 
 	# For each row (sp. line) in the config table calculate the min and max values of bandwidth
 	rows = len(sel_lines['ln_id'])

@@ -266,12 +266,12 @@ def read_rdb(filename):
     data = f.readlines()
     f.close()
 
-    key = string.split(data[0][:-1],'\t')
+    key = str.split(data[0][:-1],'\t')
     output = {}
     for i in range(len(key)): output[key[i]] = []
 
     for line in data[2:]:
-        qq = string.split(line[:-1],'\t')
+        qq = str.split(line[:-1],'\t')
         for i in range(len(key)):
             try: value = float(qq[i])
             except ValueError: value = qq[i]
