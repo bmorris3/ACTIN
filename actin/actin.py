@@ -14,7 +14,8 @@ import astropy.io.fits as pyfits
 import pkg_resources
 import appdirs
 
-path = os.path.dirname(os.path.realpath(__file__)) # directory of actin.py
+# directory of this file
+path = os.path.dirname(os.path.realpath(__file__))
 
 # location of ACTIN files:
 actin_files_dir = os.path.join(path, "actin_files")
@@ -34,17 +35,18 @@ import actin_functions as func
 # Configuration file:
 config_file = os.path.join(path, "config_lines.txt")
 
-# get version from installation via pip
+# Version file:
+version_file = os.path.join(path, "VERSION")
+
 try:
-    version = pkg_resources.require("actin")[0].version
-    print("actin %s" % version)
-except:
-    version = "unknown"
-    print("actin %s version" % version)
+    with open(version_file, 'r') as file:
+        version = file.read()
+    print("ACTIN %s" % version)
+except: print("ACTIN unknown version")
 
 
 
-def actin_file(file, calc_index, config_file=config_file, save_output=False, line_plots=False, obj_name=None, targ_list=None, del_out=False, weight=None, norm='npixels'):
+def actin_file(file, calc_index, config_file=config_file, save_output=False, line_plots=False, obj_name=None, targ_list=None, del_out=False, weight=None, frac=True, norm='npixels'):
     """
     Runs ACTIN for one fits file.
     Accepts files of types: 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
@@ -205,7 +207,7 @@ def actin_file(file, calc_index, config_file=config_file, save_output=False, lin
         calc_ind.check_lines(data['wave'], sel_lines)
 
         # Calculate flux in the required lines
-        sel_lines = calc_ind.calc_flux_lines(data, sel_lines, save_plots=line_plots, weight=weight, norm=norm)
+        sel_lines = calc_ind.calc_flux_lines(data, sel_lines, save_plots=line_plots, weight=weight, frac=frac, norm=norm)
 
         # Calculate chosen indices
         index = calc_ind.calc_ind(sel_lines)
@@ -223,7 +225,7 @@ def actin_file(file, calc_index, config_file=config_file, save_output=False, lin
     return data, index, save_name
 
 
-def actin(files, calc_index, config_file=config_file, save_output=False, line_plots=False, obj_name=None, targ_list=None, del_out=False, weight=None, norm='npixels', config_path=False, test=False):
+def actin(files, calc_index, config_file=config_file, save_output=False, line_plots=False, obj_name=None, targ_list=None, del_out=False, weight=None, frac=True, norm='npixels', config_path=False, test=False):
     """
     Runs 'actin_file' function for one or multiple fits files, for one or multiple stars.
     Accepts files of types: 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
@@ -290,7 +292,7 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
     if test:
         calc_index = ("I_CaII", "I_Ha", "I_NaI")
         if test == "e2ds": files = os.path.join(path, "test_files", "HARPS.2003-12-13T06:19:48.371_e2ds_A.fits")
-        if test == "s1d": files = os.path.join(path, "test_files", "HARPS.2003-12-13T06:19:48.371_s1d_A.fits")
+        if test == "s1d": files = os.path.join(path, "test_files", "HARPS.2010-09-18T23:42:36.178_s1d_A.fits")
         if test == "adp": files = os.path.join(path, "test_files", "ADP.2014-09-16T11:04:45.123.fits")
 
 
@@ -316,14 +318,14 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
     # Case of files is one files (str) [if called from script]
     if type(files) is str:
         # run ACTIN for one file
-        actin_file(files, calc_index, config_file=config_file, save_output=save_output, line_plots=line_plots, obj_name=obj_name, targ_list=targ_list, del_out=del_out, weight=weight, norm=norm)
+        actin_file(files, calc_index, config_file=config_file, save_output=save_output, line_plots=line_plots, obj_name=obj_name, targ_list=targ_list, del_out=del_out, weight=weight, frac=frac, norm=norm)
 
     elif type(files) is list and len(files) > 1:
         # run ACTIN for list of files
         output_rdb = []
         for k in range(len(files)):
             try:
-                output = actin_file(files[k], calc_index, config_file=config_file, save_output=save_output, line_plots=line_plots, obj_name=obj_name, targ_list=targ_list, del_out=del_out, weight=weight, norm=norm)[2]
+                output = actin_file(files[k], calc_index, config_file=config_file, save_output=save_output, line_plots=line_plots, obj_name=obj_name, targ_list=targ_list, del_out=del_out, weight=weight, frac=frac, norm=norm)[2]
                 output_rdb.append(output)
             except: pass
 
@@ -341,6 +343,7 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
     if type(files) is str: nfiles = 1
     else: nfiles = len(files)
     print("Weight used in flux:\t%s" % weight)
+    print("Fractional pixels:\t%s" % frac)
     print("Normalization of flux:\t%s" % norm)
     print("Files analysed:\t\t%i" % nfiles)
     print("Save output:\t\t%s" % save_output)
@@ -387,10 +390,12 @@ def main():
 
     parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False)
 
+    parser.add_argument('--frac', '-frc', help='Turns fractional pixel on (True, default) or off (False).', default=True, type=lambda x: (str(x).lower() == 'true'))
+
 	# read arguments from the command lines
     args = parser.parse_args()
 
-    actin(files=args.files, calc_index=args.index, config_file=cfg_file, save_output=args.save_data, line_plots=args.save_plots, obj_name=args.obj_name, targ_list=args.targ_list, del_out=args.del_out, weight=args.weight, norm=args.norm, config_path=args.config_path, test=args.test)
+    actin(files=args.files, calc_index=args.index, config_file=cfg_file, save_output=args.save_data, line_plots=args.save_plots, obj_name=args.obj_name, targ_list=args.targ_list, del_out=args.del_out, weight=args.weight, norm=args.norm, config_path=args.config_path, test=args.test, frac=args.frac)
 
     #print "Config file path:\t%s" % os.path.split(cfg_file)[0]
 

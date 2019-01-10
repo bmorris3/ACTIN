@@ -1,12 +1,23 @@
 #!/usr/bin/env python
 
+import os
 import subprocess
 
 try: from setuptools import setup
 except: from distutils.core import setup
 
+
+path = os.path.dirname(os.path.realpath(__file__))
+version_file = os.path.join(path, "actin", "VERSION")
+
+try:
+    with open(version_file, 'r') as file:
+        version = file.read()
+except: version = "unknown"
+
+
 setup(name = 'actin',
-      version = '1.2.3',
+      version = version,
       description = 'Activity Indices Calculator',
       url = 'http://github.com/gomesdasilva/actin',
       download_url = 'https://github.com/gomesdasilva/ACTIN/archive/v1.0.tar.gz',
@@ -23,6 +34,6 @@ setup(name = 'actin',
       )
 
 
-# This runs ACTIN and gives location of config file
+# This runs ACTIN from terminal, creates ACTIN directory with config file in Application Support and gives its location
 try: subprocess.call(["actin", "-cfg", "True"])
 except: pass

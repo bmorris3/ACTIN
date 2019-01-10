@@ -106,7 +106,7 @@ def check_lines(wave, sel_lines):
 	return
 
 
-def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixels'):
+def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, frac=True, norm='npixels'):
 	"""
 	Calculates the sum of the flux and associated errors for all spectral lines required to calculate the selected indices.
 
@@ -225,7 +225,7 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, norm='npixel
 
 		print("Using %s bandpass" % bandtype[k])
 
-		win = get_win.get_win(wave, flux, ln_ctr[k], ln_win[k], bandtype[k], blaze=blaze, snr=snr, err=err, weight=weight, norm=norm)
+		win = get_win.get_win(wave, flux, ln_ctr[k], ln_win[k], bandtype[k], blaze=blaze, snr=snr, err=err, weight=weight, frac=frac, norm=norm)
 
 		sel_lines['flux'].append(win['sum'])
 		sel_lines['error'].append(win['sum_err'])

@@ -11,9 +11,10 @@ import astropy.io.fits as pyfits
 import numpy as np
 
 
-def frac_pixels(wave, flux, wmin, wmax):
+def frac_pixels(wave, flux, wmin, wmax, frac=True):
     """
-    For given 'wave' and 'flux' (wavelength and flux) calculates the fraction of pixels inside a bandpass with limits 'wmin' and 'wmax' and returns the total flux inside the bandpass taking the fraction of pixels into account.
+    For given 'wave' and 'flux' (wavelength and flux) calculates the fraction of pixels inside a bandpass with limits 'wmin' and 'wmax' and returns the total flux inside the bandpass taking the fraction of pixels into account, 'flux_win', along with the number of pixels inside the bandwidth, 'pixels_win'.
+    To deactivate fractional pixels (enable integral pixels) use frac=False.
     """
 
     pix_size = np.diff(wave)
@@ -26,19 +27,22 @@ def frac_pixels(wave, flux, wmin, wmax):
     frac_left = 1 - (wave[cond][0] - wmin)/pix_size[(wave < wmin)][-1]
     frac_right = (wmax - wave[cond][-1])/pix_size[(wave < wmax)][-1]
 
-    pixels_win = len(wave[cond]) + frac_left + frac_right
-
     frac_flux_left = flux[(wave < wmin)][-1] * frac_left
     frac_flux_right = flux[(wave > wmax)][0] * frac_right
 
     flux_win = flux[cond]
-    flux_win = np.insert(flux_win, 0, frac_flux_left)
-    flux_win = np.append(flux_win, frac_flux_right)
+    if frac is True:
+        flux_win = np.insert(flux_win, 0, frac_flux_left)
+        flux_win = np.append(flux_win, frac_flux_right)
+        pixels_win = len(wave[cond]) + frac_left + frac_right
+    elif frac is False:
+        pixels_win = len(wave[cond])
+    else: print("*** ERROR: 'frac' must either be True or False.")
 
     return flux_win, pixels_win
 
 
-def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, norm='npixels'):
+def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, frac=True, norm='npixels'):
     """
     Calculates the sum of the flux inside a bandpass, using different bandpass functions and weights and taking into account fractions of pixels in the bandpass.
 
@@ -65,8 +69,10 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, norm=
         Bandpass function. If None is a square function with limits ln_ctr - ln_win/2 and ln_ctr + ln_win/2.
     """
 
-    if weight == 'blaze': weight = blaze
-    elif weight == None: weight = np.ones(len(flux))
+    if weight == 'blaze':
+        weight = blaze
+    elif weight == None:
+        weight = np.ones(len(flux))
     else:
         print("*** ERROR: 'weight' option must be 'blaze' or None, '%s' was given" % weight)
         quit()
@@ -74,43 +80,44 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, norm=
     wmin = ln_ctr - ln_win/2.
     wmax = ln_ctr + ln_win/2.
 
-    flux_win = frac_pixels(wave, flux, wmin, wmax)[0]
-    blaze_win = frac_pixels(wave, blaze, wmin, wmax)[0]
+    flux_win = frac_pixels(wave, flux, wmin, wmax, frac=frac)[0]
+    blaze_win = frac_pixels(wave, blaze, wmin, wmax, frac=frac)[0]
 
     flux_win_norm = flux_win/blaze_win
 
     if bandtype == 'sq':
         bandfunc = None
-
     elif bandtype == 'tri':
         # Add triangular weight function for line:
         bandfunc = np.where(wave >= ln_ctr, -(wave - ln_ctr)/ln_win*2. + 1, (wave - ln_ctr)/ln_win*2. + 1)
 
         bandfunc = np.where(bandfunc > 0, bandfunc, bandfunc*0.0)
-
         weight = weight * bandfunc
     else:
         print("*** ERROR: 'bandtype' (in config file) must be either 'sq' or 'tri' but '%s' was given. The config file path can be found by calling 'actin -cfg True'." % bandtype)
         quit()
 
-    weight_win, npixels = frac_pixels(wave, weight, wmin, wmax)
+    weight_win, npixels = frac_pixels(wave, weight, wmin, wmax, frac=frac)
 
     # err = sqrt(flux), var = err**2
-    #variance = ln_c * flux_win/blaze_win**2
     variance = flux_win/blaze_win**2
 
     if norm == 'band':
         f_sum = sum(flux_win_norm * weight_win)/ln_win
         f_sum_var = sum(variance * weight_win**2)/ln_win**2
+
     elif norm == 'npixels':
         f_sum = sum(flux_win_norm * weight_win)/npixels
         f_sum_var = sum(variance * weight_win**2)/npixels**2
+
     elif norm == 'weight':
         f_sum = sum(flux_win_norm * weight_win)/sum(weight_win)
         f_sum_var = sum(variance * weight_win**2)/sum(weight_win)**2
+
     elif norm == None:
         f_sum = sum(flux_win_norm * weight_win)
         f_sum_var = sum(variance * weight_win**2)
+
     else:
         print("*** ERROR: 'norm' option must be either 'band', 'npixels', 'weight', or None, but '%s' was given" % norm)
         quit()
@@ -193,7 +200,7 @@ def remove_output(files, save_output, targ_list=None):
 
 def get_target(fits_file):
     """
-    Returns the object targeted in the fits file 'fits_file'.
+    Returns the object targeted in the fits file 'fits_file'. For HARPS and HARPS-N.
     """
 
     hdu = pyfits.open(fits_file)

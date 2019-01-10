@@ -47,7 +47,7 @@ def sel_order(wave_2d, ln_ctr, ln_win):
 	return order
 
 
-def get_win(wave, flux, ln_ctr, ln_win, bandtype, blaze=None, snr=None, err=None, weight=None, norm='npixels'):
+def get_win(wave, flux, ln_ctr, ln_win, bandtype, blaze=None, snr=None, err=None, weight=None, frac=True, norm='npixels'):
 	"""
 	Calculates the sum of the flux and associated error for a given spectral line.
 
@@ -147,7 +147,7 @@ def get_win(wave, flux, ln_ctr, ln_win, bandtype, blaze=None, snr=None, err=None
 	wmax = ln_ctr + ln_win/2.
 
 	# Calculate the flux inside bandpass taking into account fraction of pixels
-	flux_win, pixels_win = func.frac_pixels(wave, flux, wmin, wmax)
+	flux_win, pixels_win = func.frac_pixels(wave, flux, wmin, wmax, frac=frac)
 
 	print("Nr. of pixels in bandpass = %.2f" % pixels_win)
 
@@ -159,7 +159,7 @@ def get_win(wave, flux, ln_ctr, ln_win, bandtype, blaze=None, snr=None, err=None
 		print("Fraction of flux with negative values = %.5f" % frac_neg)
 
 	# Computing flux for line parameters
-	f_sum, f_sum_err, bandfunc = func.compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype=bandtype, weight=weight,norm=norm)
+	f_sum, f_sum_err, bandfunc = func.compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype=bandtype, weight=weight, frac=frac, norm=norm)
 
 	win['sum'] = f_sum
 	win['sum_err'] = f_sum_err
