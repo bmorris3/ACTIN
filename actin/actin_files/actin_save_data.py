@@ -84,7 +84,8 @@ def line_plot(wave, flux, obj, date, ln_id, ln_ctr, ln_win, bandfunc, file_type,
 	indices. The plots are saved in the directory: 'out_dir'/'obj'.
 	"""
 
-	width, height = func.plot_params(6, 3.5)
+
+	width, height = func.plot_params()
 
 	win_min = ln_ctr - ln_win/2
 	win_max = ln_ctr + ln_win/2
@@ -98,20 +99,23 @@ def line_plot(wave, flux, obj, date, ln_id, ln_ctr, ln_win, bandfunc, file_type,
 
 	flux_reg = flux[(wave > wave_min + 4) & (wave < wave_max + 4)]
 
+
 	plt.figure(figsize=(width, height))
 	plt.plot(wave, flux/max(flux_reg),'k-')
+	#plt.plot(wave, flux/max(flux_reg)*0.9,'k-')
 
 	if bandfunc is not None:
-		plt.plot(wave[(bandfunc > 0)], bandfunc[(bandfunc > 0)],'b-', linewidth=1.5)
+		#plt.plot(wave, flux/max(flux_reg)*bandfunc, 'g-')
+		plt.plot(wave[(bandfunc >= 0)], bandfunc[(bandfunc >= 0)],'b-', linewidth=1)
 
 	plt.xlim(wave_min, wave_max)
 
 	plt.ylim(0., 1.3)
 
 	if bandfunc is None:
-		plt.axvline(ln_ctr, color='b', ls='--', linewidth=1.5)
-		plt.axvline(win_min, color='b', ls='-', linewidth=1.5)
-		plt.axvline(win_max, color='b', ls='-', linewidth=1.5)
+		plt.axvline(ln_ctr, color='b', ls='--', linewidth=1)
+		plt.axvline(win_min, color='b', ls='-', linewidth=1)
+		plt.axvline(win_max, color='b', ls='-', linewidth=1)
 
 	plt.ylabel('%s flux' % ln_id)
 	plt.xlabel('Wavelength [Ang]')
@@ -212,7 +216,10 @@ def save_data(data, index, out_dir):
 	print("\nSAVING DATA")
 	print("-----------")
 
-	if data is None or out_dir is None: return
+
+	if data is None or out_dir is None:
+		print("***ERROR: data is none of out_dir is none")
+		return
 
 	# For case of reading from rdb, obj and date will be huge repeating lists
 	# reading from rdb file
@@ -241,7 +248,7 @@ def save_data(data, index, out_dir):
 			ind['%s_flg' % indices[k]] = index['flg'][k]
 			ind['%s_mfrac_neg' % indices[k]] = index['mfrac_neg'][k]
 
-		index_keys = ind.keys()
+		index_keys = list(ind.keys())
 		index_keys.sort()
 
 		keys = data_keys + index_keys

@@ -157,12 +157,24 @@ def plot_params(width=6, height=3.5):
     """
 
     rcdefaults()
-    rc('axes',linewidth = 1.2)
-    rc('lines',markeredgewidth=1)
-    rc('xtick.major',size=7)
-    rc('ytick.major',size=7)
-    rc('xtick.minor',size=4)
-    rc('ytick.minor',size=4)
+    rc('axes', linewidth=1)
+    rc('lines', markeredgewidth=0.5)
+
+    rc('errorbar', capsize=2)
+
+    rc('ytick', direction='in')
+    rc('xtick', direction='in')
+
+    rc('ytick', right='True')
+    rc('xtick', top='True')
+
+    rc('xtick.minor', visible='True')
+
+
+    rc('xtick.major', size=7)
+    rc('ytick.major', size=7)
+    rc('xtick.minor', size=3)
+    rc('ytick.minor', size=3)
     rc("font", family="sans-serif")
     rc("font", size=10)
 

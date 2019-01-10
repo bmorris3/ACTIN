@@ -295,6 +295,7 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
         if test == "e2ds": files = os.path.join(path, "test_files", "HARPS.2003-12-13T06:19:48.371_e2ds_A.fits")
         if test == "s1d": files = os.path.join(path, "test_files", "HARPS.2010-09-18T23:42:36.178_s1d_A.fits")
         if test == "adp": files = os.path.join(path, "test_files", "ADP.2014-09-16T11:04:45.123.fits")
+        if test == 'rdb': files = os.path.join(path, "test_files", "2010-09-18T23:42:36.178_spec.rdb")
 
 
     if files is None:
@@ -328,7 +329,7 @@ def actin(files, calc_index, config_file=config_file, save_output=False, line_pl
             try:
                 output = actin_file(files[k], calc_index, config_file=config_file, save_output=save_output, line_plots=line_plots, obj_name=obj_name, targ_list=targ_list, del_out=del_out, weight=weight, frac=frac, norm=norm)[2]
                 output_rdb.append(output)
-            except: pass
+            except: return
 
         output_rdb = list(set(output_rdb)) # remove duplicates in list
 

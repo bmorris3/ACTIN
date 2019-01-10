@@ -54,10 +54,12 @@ def plt_time(rdb_file, save_plt=False, rmv_flgs=False):
 
     bjd = np.asarray(data['bjd']) - 2450000
 
+    data_keys = list(data.keys())
+
     ind_ids = []
-    for k in range(len(data.keys())):
-        if 'I_' in data.keys()[k]:
-            ind_ids.append(('_').join(data.keys()[k].split('_')[:2]))
+    for k in range(len(data_keys)):
+        if 'I_' in data_keys[k]:
+            ind_ids.append(('_').join(data_keys[k].split('_')[:2]))
 
     if not ind_ids:
         print("No indices detected in %s" % rdb_file)
@@ -78,7 +80,7 @@ def plt_time(rdb_file, save_plt=False, rmv_flgs=False):
 
         N = 0
         for i in range(len(ind[ind_ids[k]])):
-            if '%s_flg' % ind_ids[k] in ind.keys() and ind['%s_flg' % ind_ids[k]][i] == 'None':
+            if '%s_flg' % ind_ids[k] in list(ind.keys()) and ind['%s_flg' % ind_ids[k]][i] == 'None':
                 N += 1
                 plt.errorbar(bjd[i], ind[ind_ids[k]][i], ind['%s_err' % ind_ids[k]][i], c='k', marker='.',ls='')
             elif ind['%s_flg' % ind_ids[k]][i] != 'None':
@@ -91,7 +93,7 @@ def plt_time(rdb_file, save_plt=False, rmv_flgs=False):
 
         plt.annotate("N = %i" % N, xy=(0.05,0.85), xycoords='axes fraction', textcoords='axes fraction')
 
-        plt.xlabel('bjd - 2450000')
+        plt.xlabel('BJD - 2450000 [days]')
         plt.ylabel(ind_ids[k])
 
         if save_plt is True:
@@ -138,7 +140,7 @@ def plt_time_mlty(rdb_file, save_plt=False, rmv_flgs=False, hdrs=['I_CaII', 'I_H
     star = file.split('_')[0]
     file_type = file.split('_')[1]
 
-    width, height = func.plot_params(7, 6.5)
+    width, height = func.plot_params(7, 4.5)
 
     data = func.read_rdb(rdb_file)[0]
 
@@ -188,7 +190,7 @@ def plt_time_mlty(rdb_file, save_plt=False, rmv_flgs=False, hdrs=['I_CaII', 'I_H
                     plt.errorbar(bjd[i], ind[ind_ids[k]][i], ind['%s_err' % ind_ids[k]][i], c='r', marker='.',ls='')
                 else: pass
 
-        plt.xlabel('bjd - 2450000')
+        plt.xlabel('BJD - 2450000 [days]')
         plt.ylabel(ind_ids[k])
 
         from matplotlib.ticker import MaxNLocator
@@ -201,7 +203,7 @@ def plt_time_mlty(rdb_file, save_plt=False, rmv_flgs=False, hdrs=['I_CaII', 'I_H
     n = len(ind_ids)
     plt.annotate(star, xy=(0.05,1.*n+0.05), xycoords='axes fraction', textcoords='axes fraction')
 
-    plt.annotate("N = %i" % N, xy=(0.4,1.*n+0.05), xycoords='axes fraction', textcoords='axes fraction')
+    plt.annotate("N = %i" % N, xy=(0.85,1.*n+0.05), xycoords='axes fraction', textcoords='axes fraction')
 
     plt.subplots_adjust(hspace=0.000)
 
