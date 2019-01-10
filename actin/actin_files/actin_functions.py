@@ -58,6 +58,8 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, frac=
         Function to be used in the integration of flux. If 'sq', uses a square function with limits 'ln_win', if 'tri' a triangular function with full-width-at-half-maximum given by 'ln_win'.
     weight : string
         Function to weight the integrated flux. If 'blaze' the flux is multiplied by the blaze function, if None (default) the flux is not weighted (default).
+    frac : bool (optional)
+    	Use fractional pixels if 'True' (default), use integral pixels if 'False'
     norm : string
         Normalization of the flux: if 'band' the sum is normalized by the bandpass wavelength value in angstroms, if 'npixels' by the number of pixels in the bandpass (default), if 'weight' by the sum of the weight function inside the bandpass, if None the integrated flux is not normalized.
 

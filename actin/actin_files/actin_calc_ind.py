@@ -154,6 +154,8 @@ def calc_flux_lines(data, sel_lines, save_plots=False, weight=None, frac=True, n
 		(default).
 	weight : {str, None} (optional)
 		Function to weight the integrated flux. If 'blaze' the flux is multiplied by the blaze function, if None (default) the flux is not weighted (default).
+	frac : bool (optional)
+		Use fractional pixels if 'True' (default), use integral pixels if 'False'.
 	norm : str (optional)
 		Normalisation of the flux: if 'band' the sum is normalised by the bandpass wavelength value in angstroms, if 'npixels' by the number of pixels in the bandpass (default), if 'weight' by the sum of the weight function inside the bandpass, if None the integrated flux is not normalised.
 
