@@ -87,6 +87,9 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, frac=
 
     flux_win_norm = flux_win/blaze_win
 
+    # err = sqrt(flux), var = err**2
+    variance = flux_win/blaze_win**2
+
     if bandtype == 'sq':
         bandfunc = None
     elif bandtype == 'tri':
@@ -101,28 +104,21 @@ def compute_flux(wave, flux, blaze, ln_ctr, ln_win, bandtype, weight=None, frac=
 
     weight_win, npixels = frac_pixels(wave, weight, wmin, wmax, frac=frac)
 
-    # err = sqrt(flux), var = err**2
-    variance = flux_win/blaze_win**2
 
     if norm == 'band':
-        f_sum = sum(flux_win_norm * weight_win)/ln_win
-        f_sum_var = sum(variance * weight_win**2)/ln_win**2
-
+        nrm = ln_win
     elif norm == 'npixels':
-        f_sum = sum(flux_win_norm * weight_win)/npixels
-        f_sum_var = sum(variance * weight_win**2)/npixels**2
-
+        nrm = npixels
     elif norm == 'weight':
-        f_sum = sum(flux_win_norm * weight_win)/sum(weight_win)
-        f_sum_var = sum(variance * weight_win**2)/sum(weight_win)**2
-
+        nrm = sum(weight_win)
     elif norm == None:
-        f_sum = sum(flux_win_norm * weight_win)
-        f_sum_var = sum(variance * weight_win**2)
-
+        nrm = 1.
     else:
         print("*** ERROR: 'norm' option must be either 'band', 'npixels', 'weight', or None, but '%s' was given" % norm)
         quit()
+
+    f_sum = sum(flux_win_norm * weight_win)/nrm
+    f_sum_var = sum(variance * weight_win**2)/nrm**2
 
     f_sum_err = np.sqrt(f_sum_var)
 
