@@ -63,6 +63,8 @@ Arguments:
 
 `-t` str : Tests the program using the test fits files provided. Use `e2ds`, `s1d` or `adp` to test e2ds, s1d or ADP files, respectively. The code searches for the required files automatically.
 
+`-frac` bool : Use fractional pixels if True (default), use integral pixels if False.
+
 ### Testing the code with minimum arguments:
 
 The example below will test the code using the test files provided in the package.
