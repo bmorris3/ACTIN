@@ -1,11 +1,11 @@
 # ACTIN 1.3
+Beta
 ### Activity Indices Calculator
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00667/status.svg)](https://doi.org/10.21105/joss.00667)
 
 Reads fits files from HARPS, HARPS-N and ESPRESSO spectrographs, rdb tables, and outputs user defined spectral activity indices (along with other relevant data).
 
-Beta
 
 ### Requires the following Python modules:
 - numpy
