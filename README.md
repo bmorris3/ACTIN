@@ -65,7 +65,7 @@ Arguments:
 
 `-frc` : Use fractional pixels if `True` (default), use integral pixels if `False`. If using `False` and calculating the I_CaII index as given in the original config_lines.txt file ACTIN will simulate the values of 's_raw' from the HARPS pipeline. Note however that this option might induce artificial variations in the indices due to the use of integral pixels in the bandpasses.
 
-##### Important:
+#### Important:
 
 When running ACTIN for a second time with the same data on the same output directory use `-del True` otherwise the program will detect the same dates,  ignore the measurements and not give any output.
 
