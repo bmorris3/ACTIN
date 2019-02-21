@@ -5,7 +5,7 @@
 
 Reads fits files from HARPS, HARPS-N and ESPRESSO spectrographs, rdb tables, and outputs user defined spectral activity indices (along with other relevant data).
 
-This code was only tested on a MacOSX.
+Beta
 
 ### Requires the following Python modules:
 - numpy
