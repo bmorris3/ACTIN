@@ -203,7 +203,8 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
 
     # Override object name with name given in obj_name option
     if obj_name:
-        ac_tools.override_obj(obj, obj_name)
+        obj = ac_tools.override_obj(obj, obj_name)
+        print("Object name changed to:", obj)
 
     if instr in ('ESPRESSO'):
         if file_type == "S2D":

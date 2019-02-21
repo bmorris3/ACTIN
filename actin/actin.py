@@ -355,15 +355,13 @@ def main():
 
     parser.add_argument('--save_output', '-s', help='Path to output directory of data table, or False (default).', default=False)
 
-    parser.add_argument('--ln_plts', '-lp', help="Path to directory to save line plots. If 'same' saves line plots to same directory of data output. If 'show' only shows the plots. If 'False' (default) does not save or show line plots", default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--ln_plts', '-lp', help="Path to directory to save line plots. If 'same' saves line plots to same directory of data output. If 'show' only shows the plots. If 'False' (default) does not save or show line plots", default=False)
 
     parser.add_argument('--obj_name', '-obj', help='Give target a name that overides the one from the fits files.', default=None)
 
     parser.add_argument('--targ_list', '-tl', help='Give a list of stars to select from fits files.', nargs='+', default=None)
 
     parser.add_argument('--del_out', '-del', help='Delete output data file if True.', default=False, type=lambda x: (str(x).lower() == 'true'))
-
-    #parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False, type=lambda x: (str(x).lower() == 'true'))
 
     parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False)
 
