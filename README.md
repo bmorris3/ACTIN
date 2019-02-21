@@ -23,7 +23,7 @@ Clone the github repository (in releases) to a directory of your choice and inst
 
 The `config_lines.txt` file is the line configuration file (instructions inside). This file is used to add line parameters to calculate any index as long as the line cores and bandpasses are inside the spectral range and spectral orders range (for 2d spectra) of the spectrograph. ACTIN will check this at start and give an error message if line parameters don't match the spectra.
 
-This file is available from the directory each OS uses for storing user data(*):
+This file is available from the directory each OS uses for storing user data (*)
 
 To get your path to the configuration file call `actin` without any arguments.
 
