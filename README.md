@@ -28,7 +28,7 @@ To get your path to the configuration file call `actin` without any arguments.
 
 The configuration file can be copied to another directory, modified, and used via `actin -cf dir/filename`.
 
-Note: If ACTIN was not installed via pip instead of using `actin`, call the program using `python actin.py`.
+NOTE: If not installed via pip, use `python actin.py` instead of `actin`.
 
 
 ### Quick start:
@@ -71,13 +71,14 @@ The example below will test the code using the test files provided in the packag
 
 `actin -t e2ds`
 
-NOTE: If not installed via pip, use `python actin.py` instead of `actin`.
 
 ### Example for multiple files:
 
 `actin -f ../fits/*/*e2ds_A.fits -i I_CaII I_Ha -s ../output -del True -tl Gl273 Gl581`
 
 This will execute ACTIN for all the subdirectories inside `../fits/` with files ending with `e2ds_A.fits`, calculate the indices `I_CaII` and `I_Ha`, output the data to `../output/star_names`, and, before running the code, delete any output file that was previously there, in this case `Gl273_HARPS_e2ds_data.rdb` and `Gl581_HARPS_e2ds_actin.rdb`. Only fits files belonging to the stars chosen in `-tl` will be read, in this case `Gl273` and `Gl581`. Since `-frc` is True by default, fractional pixels will be used to compute the indices.
+
+---
 
 (*) For OSX: `~/Library/Application Support/<AppName>`
 
