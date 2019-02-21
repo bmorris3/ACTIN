@@ -241,12 +241,13 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
         sys.exit()
 
     # Make lists to be iterated below
-    files = list(files)
+    if isinstance(files, str): files = [files]
 
     if rv_in is None:
         rv_in = [rv_in]*len(files)
-    else:
-        rv_in = list(rv_in)
+    elif type(rv_in) is not list:
+        rv_in = [rv_in]
+    else: pass
 
     # Check if files exist
     ac_tools.check_files(files)
@@ -362,7 +363,9 @@ def main():
 
     parser.add_argument('--del_out', '-del', help='Delete output data file if True.', default=False, type=lambda x: (str(x).lower() == 'true'))
 
-    parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False, type=lambda x: (str(x).lower() == 'true'))
+    #parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False, type=lambda x: (str(x).lower() == 'true'))
+
+    parser.add_argument('--test', '-t', help='Tests actin using the provided fits files in the "test_files" directory. Options are "e2ds", "s1d", and "adp"', default=False)
 
     parser.add_argument('--frac', '-frc', help='Turns fractional pixel on (True, default) or off (False).', default=True, type=lambda x: (str(x).lower() == 'true'))
 

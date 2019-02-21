@@ -336,7 +336,7 @@ def check_targ(fits_file, targets):
     Checks if a fits file belongs to a target in a list of targets.
     """
 
-    print("Executing actin_functions.check_targ:")
+    print("Executing: check_targ")
 
     print("Targets = {}".format(targets))
 
@@ -366,7 +366,7 @@ def test_actin(test, path):
         files = os.path.join(path, "test_files", "2010-09-18T23:42:36.178_spec.rdb")
     else:
         print("*** ERROR:")
-        print("Test can only be 'S1D', 'S2D', 'e2ds', 's1d', 'adp', or 'rdb'")
+        print("*** Test can only be 'S1D', 'S2D', 'e2ds', 's1d', 'adp', or 'rdb'")
     return calc_index, files
 
 

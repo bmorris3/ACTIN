@@ -142,9 +142,7 @@ def plt_time_mlty(info, out_dir, save_plt=False, rmv_flgs=False, hdrs=['I_CaII',
     print()
     print("Executing plt_time_mlty:")
 
-    if not out_dir:
-        print("*** ERROR: There is no 'out_dir'.")
-        return
+    if not out_dir: return
     if not info:
         print("*** ERROR: There is no 'info' dictionary.")
         return
