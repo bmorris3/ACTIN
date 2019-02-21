@@ -252,35 +252,38 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
         wave_raw = hdr['CRVAL1'] + hdr['CDELT1']*np.arange(hdr['NAXIS1'])
         blaze = np.ones(len(flux))
 
-    if file_type == 'e2ds':
-        wave_file = hdr['HIERARCH {} DRS CAL TH FILE'.format(obs)]
-        print("Wave file:\t{}".format(wave_file))
-        wave_pfile = os.path.join(folder, wave_file)
-        if force_calc_wave == False:
-            try:
-                wave_hdu = pyfits.open(wave_pfile)
-            except:
-                print("*** INFO: Could not open", wave_pfile)
-                wave_pfile = check_for_calib_files(hdr, 'wave', folder)
+    if file_type in ('e2ds', 'ADP'):
+        if file_type != 'ADP':
+            # Reading data from wave file
+            wave_file = hdr['HIERARCH {} DRS CAL TH FILE'.format(obs)]
+            print("Wave file:\t{}".format(wave_file))
+            wave_pfile = os.path.join(folder, wave_file)
+            if force_calc_wave == False:
                 try:
                     wave_hdu = pyfits.open(wave_pfile)
                 except:
-                    print("*** INFO: Could not open:")
-                    print("***", wave_pfile)
-                    print("*** ACTION: Computing wavelength from", file_type)
-                    wave_raw = calc_wave(pfile, obs)
-                    wave_raw = np.asarray(wave_raw)
+                    print("*** INFO: Could not open", wave_pfile)
+                    wave_pfile = check_for_calib_files(hdr, 'wave', folder)
+                    try:
+                        wave_hdu = pyfits.open(wave_pfile)
+                    except:
+                        print("*** INFO: Could not open:")
+                        print("***", wave_pfile)
+                        print("*** ACTION: Computing wavelength from", file_type)
+                        wave_raw = calc_wave(pfile, obs)
+                        wave_raw = np.asarray(wave_raw)
+                    else:
+                        wave_raw = wave_hdu[0].data
+                        wave_hdu.close()
                 else:
                     wave_raw = wave_hdu[0].data
                     wave_hdu.close()
-            else:
-                wave_raw = wave_hdu[0].data
-                wave_hdu.close()
-        if force_calc_wave == True:
-            print("*** ACTION: Computing wavelength from", file_type)
-            wave_raw = calc_wave(pfile, obs)
-            wave_raw = np.asarray(wave_raw)
+            if force_calc_wave == True:
+                print("*** ACTION: Computing wavelength from", file_type)
+                wave_raw = calc_wave(pfile, obs)
+                wave_raw = np.asarray(wave_raw)
 
+        # Reading data from blaze file
         blaze_file = hdr['HIERARCH {} DRS BLAZE FILE'.format(obs)]
         print("Blaze file:\t{}".format(blaze_file))
         blaze_pfile = os.path.join(folder, blaze_file)
@@ -294,7 +297,10 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
                 blaze_hdu = pyfits.open(blaze_pfile)
             except:
                 print("*** WARNING: Flux not deblazed. This can introduce artificial variations in the indices values.")
-                blaze = np.ones([len(flux),len(flux[0])])
+                if file_type == 'e2ds':
+                    blaze = np.ones([len(flux),len(flux[0])])
+                if file_type == 'ADP':
+                    blaze = np.ones(len(flux))
                 flg = 'noDeblazed'
             else:
                 blaze = blaze_hdu[0].data
@@ -328,7 +334,10 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
 
     if instr in ('HARPS', 'HARPN'):
         # Reading data from CCF file
-        ccf_search = "{}*_ccf_*_A.fits".format(file_info[:-2])
+        if file_type == 'ADP':
+            ccf_search = "{}.{}*ccf_*_A.fits".format(instr, date_obs[:-2])
+        else:
+            ccf_search = "{}*_ccf_*_A.fits".format(file_info[:-2])
         ccf_search = os.path.join(folder, ccf_search)
         try:
             ccf_pfile = glob.glob(ccf_search)[0]
@@ -358,7 +367,10 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
             ccf_noise = ccf_noise * 1000 # convert to m/s
 
         # Reading data from BIS file
-        bis_search = "{}*_bis_*_A.fits".format(file_info[:-2])
+        if file_type == 'ADP':
+            bis_search = "{}.{}*bis_*_A.fits".format(instr, date_obs[:-2])
+        else:
+            bis_search = "{}*_bis_*_A.fits".format(file_info[:-2])
         bis_search = os.path.join(folder, bis_search)
         try:
             bis_pfile = glob.glob(bis_search)[0]

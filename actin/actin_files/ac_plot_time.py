@@ -54,6 +54,10 @@ def plt_time(info, out_dir, save_plt=False, rmv_flgs=False):
     bjd_raw = np.asarray(data['bjd'])
     bjd = bjd_raw - int(min(bjd_raw))
 
+    if len(bjd) == 1:
+        print("Only one data point, no need to plot.")
+        return
+
     data_keys = list(data)
 
     ind_ids = []
@@ -139,10 +143,11 @@ def plt_time_mlty(info, out_dir, save_plt=False, rmv_flgs=False, hdrs=['I_CaII',
     Output directory is the same as the one the rdb file is located.
     """
 
+    if not out_dir: return
+
     print()
     print("Executing plt_time_mlty:")
 
-    if not out_dir: return
     if not info:
         print("*** ERROR: There is no 'info' dictionary.")
         return
@@ -164,6 +169,10 @@ def plt_time_mlty(info, out_dir, save_plt=False, rmv_flgs=False, hdrs=['I_CaII',
 
     bjd_raw = np.asarray(data['bjd'])
     bjd = bjd_raw - int(min(bjd_raw))
+
+    if len(bjd) == 1:
+        print("Only one data point, no need to plot.")
+        return
 
     ind = {} # make new dictionary just for plots
     ind_ids = [] # only the indices in data
