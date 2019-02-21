@@ -35,14 +35,14 @@ NOTE: If not installed via pip, use `python actin.py` instead of `actin`.
 
 Usage:
 
-`actin -h [help] -f [files] -i [indices] -rv [rv_list] -cf [config_file] -s [output_path] -lp [output_path/same] -obj [object_name] -tl [target_list] -del [True/False] -t [test_file_type] -frc [True/False]`
+`actin -h [help] -f [files_list] -i [indices_list] -rv [rv_list] -cf [config_file] -s [output_path] -lp [output_path/same/show] -obj [object_name] -tl [target_list] -del [True/False] -t [test_file_type] -frc [True/False]`
 
 
 Arguments:
 
 `-h` : Gives a description of the arguments available.
 
-`-f` : Fits file(s) (formats S1D, S2D, e2ds, s1d, s1d_*_rv, or ADP) or rdb table(s) with headers `obj`, `date`, `bjd`, `wave`, `flux`, `error_pixel` (optional) to be read.
+`-f` : List of files (formats S1D, S2D, e2ds, s1d, s1d_*_rv, or ADP) or rdb table(s) with headers `obj`, `date`, `bjd`, `wave`, `flux`, `error_pixel` (optional) to be read.
 
 `-i` : List of indices to calculate. Indices ids must match the ones in the config file `config_lines.txt`.
 
