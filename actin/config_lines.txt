@@ -17,8 +17,8 @@
 
 ind_id	ind_var	ln_id	ln_c	ln_ctr		ln_win	bandtype
 ----------------------------------------------------------------
-I_CaII	L1	CaIIH	1	3933.664	1.09	tri
-I_CaII	L2	CaIIK	1	3968.470	1.09	tri
+I_CaII	L1	CaIIK	1	3933.664	1.09	tri
+I_CaII	L2	CaIIH	1	3968.470	1.09	tri
 I_CaII	R1	CaIIR1	1	3901.070	20.0	sq
 I_CaII	R2	CaIIR2	1	4001.070	20.0	sq
 I_NaI	L1	NaID1	1	5895.920	0.5	sq
@@ -31,4 +31,5 @@ I_Ha	R2	HaR2	1	6580.310	8.75	sq
 I_HeI	L1	HeI	1	5875.620	0.4	sq
 I_HeI	R1	HeIR1	1	5869.000	5.0	sq
 I_HeI	R2	HeIR2	1	5881.000	5.0	sq
+
 
