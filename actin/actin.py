@@ -48,7 +48,7 @@ version_file = os.path.join(path, "VERSION")
 version = ac_set.preamble(version_file)
 
 
-def actin_file(file, calc_index, rv_in, config_file=config_file, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True):
+def actin_file(file, calc_index=None, rv_in=None, config_file=config_file, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True):
     """
     Runs ACTIN for one fits file.
     Accepts files of types: 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
@@ -167,18 +167,6 @@ def actin_file(file, calc_index, rv_in, config_file=config_file, save_output=Fal
         dupl = ac_save.check_duplicate(data['obj'], data['obs_date'], data['instr'], data['file_type'], save_output)
         if dupl is True: return
 
-    info = {}
-    info['config_file'] = config_file
-    info['file_type'] = data['file_type']
-    info['version'] = version
-    info['source_path'] = os.path.split(file)[0]
-    info['tel'] = data['tel']
-    info['instr'] = data['instr']
-    info['obj'] = data['obj']
-
-    options = {}
-    options['frac'] = frac
-
     if calc_index:
         # Check selected lines for spectral range and orders
         ac_calc_ind.check_lines(data['wave'], sel_lines)
@@ -196,6 +184,18 @@ def actin_file(file, calc_index, rv_in, config_file=config_file, save_output=Fal
     if save_output is not False:
         rdb_file = ac_save.save_data(data, index, out_dir=save_output)
     else: rdb_file = None
+
+    info = {}
+    info['config_file'] = config_file
+    info['file_type'] = data['file_type']
+    info['version'] = version
+    info['source_path'] = os.path.split(file)[0]
+    info['tel'] = data['tel']
+    info['instr'] = data['instr']
+    info['obj'] = data['obj']
+
+    options = {}
+    options['frac'] = frac
 
     output = {}
     output['data'] = data

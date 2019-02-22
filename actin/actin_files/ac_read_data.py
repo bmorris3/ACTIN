@@ -142,7 +142,7 @@ def read_data_rdb(file):
     return data
 
 
-def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
+def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False):
     """
     force_calc_wave is for testing purposes only.
     """
@@ -335,6 +335,7 @@ def read_data(pfile, rv_in=False, obj_name=None, force_calc_wave=False):
 
     if instr in ('HARPS', 'HARPN'):
         # Reading data from CCF file
+
         if file_type == 'ADP':
             ccf_search = "{}.{}*ccf_*_A.fits".format(instr, date_obs[:-2])
         else:
