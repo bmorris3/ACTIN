@@ -9,6 +9,7 @@ import string
 from pylab import *
 import astropy.io.fits as pyfits
 import numpy as np
+import glob
 
 from matplotlib import pylab as plt
 
@@ -169,102 +170,65 @@ def remove_output(files, save_output, targ_list=None):
     print("Searching output files to delete...")
 
     fn_rdb = ac_set.fnames['data']
-    fn_log = ac_set.fnames['log_data']
-    fn_lns = ac_set.fnames['lines_data']
-    ftypes = ac_set.ftypes['all']
 
-    instr_list = []
-    for k in range(len(files)):
-        instr_list.append(get_instr(files[k])[1])
-    instr = list(set(instr_list))
+    rdb_search = os.path.join(save_output, "*", "*{}".format(fn_rdb))
+    rdb_files = glob.glob(rdb_search)
 
-    if isinstance(files,str): files = [files]
+    if not rdb_files:
+        print("There are no files to remove.")
+        return
 
-    err_msg = None
-
-    if save_output is False:
-        print("*** ERROR: No 'save_output' directory to search files.\nInsert the path to output folder after '-s'.")
-        sys.exit()
-
-    obj = []
-    ft = []
+    obj_list = []
     for file in files:
-        for type in ftypes:
-            if type in file:
-                ft.append(type)
-                if type == "rdb":
-                    obj.append(read_rdb(file)[0]['obj'][0])
-                elif type != "rdb":
-                    obj.append(get_target(file))
+        obj_list.append(get_target(file))
+    objs = list(set(obj_list))
 
-    if targ_list is not None:
-        ft = [ft[k] for k in range(len(ft)) if obj[k] in targ_list]
-        obj = [obj[k] for k in range(len(ft)) if obj[k] in targ_list]
 
-    # remove rdb and log files
-    old_obj = None
-    old_ft = None
-    for k in range(len(obj)):
-        for i in range(len(instr)):
-            if obj[k] != old_obj or ft[k] != old_ft:
-                print("Object: {}".format(obj[k]))
-                print("File type: {}".format(ft[k]))
-                file_rdb = "{}_{}_{}_{}".format(obj[k], instr[i], ft[k], fn_rdb)
-                file_log = "{}_{}_{}_{}".format(obj[k], instr[i], ft[k], fn_log)
-                file_lns = "{}_{}_{}_{}".format(obj[k], instr[i], ft[k], fn_lns)
-                ff_rdb = os.path.join(save_output, obj[k], file_rdb)
-                ff_log = os.path.join(save_output, obj[k], file_log)
-                ff_lns = os.path.join(save_output, obj[k], file_lns)
-
-                if os.path.isfile(ff_rdb):
-                    os.remove(ff_rdb)
-                    print("Output file removed: {}".format(ff_rdb))
-                if os.path.isfile(ff_log):
-                    os.remove(ff_log)
-                    print("Output file removed: {}".format(ff_log))
-                if os.path.isfile(ff_lns):
-                    os.remove(ff_lns)
-                    print("Output file removed: {}".format(ff_lns))
-
+    for obj in objs:
+        for rdb_file in rdb_files:
+            if obj in rdb_file:
+                if targ_list is not None:
+                    if obj in targ_list:
+                        os.remove(rdb_file)
+                        print("Output file removed:")
+                        print(rdb_file)
                 else:
-                    print("No files to remove.")
-            else: pass
-            old_obj = obj[k]
-            old_ft = ft[k]
+                    os.remove(rdb_file)
+                    print("Output file removed:")
+                    print(rdb_file)
 
     return
 
 
-def files_to_list_of_lists(files):
+def files_by_star_and_ftype(files):
     """
-    Organize files by path and file type.
+    Organize files by file type.
     """
-    # path for each star in files
-    source_path = []
-    for k in range(len(files)):
-        source_path.append(os.path.split(files[k])[0])
-    source_path = list(set(source_path))
-
     # different file types in files
     ft = []
     for k in range(len(files)):
         ft.append(get_file_type(files[k]))
     ft = list(set(ft))
 
-    # organize files by path and file type
-    lists_files = []
-    for k in range(len(source_path)):
-        ft_files = []
-        for k in range(len(ft)):
-            ft_f = []
-            for i in range(len(files)):
-                ftype = get_file_type(files[i])
-                if ftype == ft[k]:
-                    ft_f.append(files[i])
-            ft_files.append(ft_f)
-        lists_files.append(ft_files)
+    # different stars in files
+    sp = []
+    for k in range(len(files)):
+        sp.append(os.path.split(files[k])[0])
+    sp = list(set(sp))
 
-    return lists_files
+    files_list = []
+    for k in range(len(sp)):
+        lists_sp = []
+        for i in range(len(ft)):
+            lists_ft = []
+            for j in range(len(files)):
+                if sp[k] in files[j] and ft[i] in files[j]:
+                    lists_ft.append(files[j])
+            if lists_ft:
+                lists_sp.append(lists_ft)
+        files_list.append(lists_sp)
+
+    return files_list
 
 
 def override_obj(obj, obj_name):

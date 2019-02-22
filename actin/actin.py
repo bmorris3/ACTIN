@@ -208,7 +208,7 @@ def actin_file(file, calc_index, rv_in, config_file=config_file, save_output=Fal
     return output
 
 
-def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True, test=False):
+def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True, test=False, save_plots=False):
     """
     Runs 'actin_file' function for one or multiple fits files, for one or multiple stars.
     Accepts fits files from HARPS, HARPS-N, and ESPRESSO instruments.
@@ -263,29 +263,30 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
     total_files = len(files)
 
     # Organize files by path to star and file type
-    lists_files = ac_tools.files_to_list_of_lists(files)
+    files_list = ac_tools.files_by_star_and_ftype(files)
 
-    for k in range(len(lists_files)):
-        for i in range(len(lists_files[k])):
+    n_files_t = 0
+    for k in range(len(files_list)):
+        for i in range(len(files_list[k])):
             n_files = 0
-            for j in range(len(lists_files[k][i])):
+            for j in range(len(files_list[k][i])):
                 n_files += 1
-
+                n_files_t += 1
                 # Run actin file
-                output = actin_file(lists_files[k][i][j],
-                            calc_index,
-                            rv_in=rv_in[j],
-                            config_file=cfg_file,
-                            save_output=save_output,
-                            ln_plts=ln_plts,
-                            obj_name=obj_name,
-                            targ_list=targ_list,
-                            del_out=del_out,
-                            frac=frac)
+                output = actin_file(files_list[k][i][j],
+                                    calc_index,
+                                    rv_in=rv_in[j],
+                                    config_file=cfg_file,
+                                    save_output=save_output,
+                                    ln_plts=ln_plts,
+                                    obj_name=obj_name,
+                                    targ_list=targ_list,
+                                    del_out=del_out,
+                                    frac=frac)
 
             # POST-PROCESSING:
             if output:
-                # Dictionaries of last file for file_type for each path
+                # Dictionaries for each file_type
                 sel_lines = output['sel_lines']
                 info = output['info']
                 options = output['options']
@@ -295,10 +296,17 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
                 ac_save.save_log(info, options, n_files, out_dir=save_output)
                 ac_save.save_line_info(info, sel_lines, out_dir=save_output)
 
-                # Save time-series plots
-                ac_plot.plt_time(info, out_dir=save_output, rmv_flgs=False, save_plt=True)
-                ac_plot.plt_time_mlty(info, out_dir=save_output, rmv_flgs=False, save_plt=True, hdrs=calc_index)
+                if save_plots:
+                    # Save time-series plots
+                    ac_plot.plt_time(info, out_dir=save_output, rmv_flgs=False, save_plt=True)
+                    ac_plot.plt_time_mlty(info, out_dir=save_output, rmv_flgs=False, save_plt=True, hdrs=calc_index)
             else: pass
+
+    if n_files_t != total_files:
+        print()
+        print("*** ERROR: Number of ACTIN calls different than number of files.")
+        print("n_files_t:", n_files_t)
+        print("total_files:", total_files)
 
     elapsed_time = (time.time() - start_time)/60
 
@@ -367,6 +375,8 @@ def main():
 
     parser.add_argument('--frac', '-frc', help='Turns fractional pixel on (True, default) or off (False).', default=True, type=lambda x: (str(x).lower() == 'true'))
 
+    parser.add_argument('--save_plots', '-sp', help='If True, plot time-series.', default=False, type=lambda x: (str(x).lower() == 'true'))
+
     #parser.add_argument('--plt_spec', '-pspec', help='Plot full spectrum if True, If int is given plot spectrum in the int order. False is default.', default=False)
 
     # read arguments from the command lines
@@ -382,7 +392,8 @@ def main():
         targ_list=args.targ_list,
         del_out=args.del_out,
         test=args.test,
-        frac=args.frac)
+        frac=args.frac,
+        save_plots=args.save_plots)
 
 if __name__ == "__main__":
     main()
