@@ -38,7 +38,7 @@ NOTE: If not installed via pip, use `python actin.py` instead of `actin`.
 
 Usage:
 
-`actin -h [help] -f [files_list] -i [indices_list] -rv [rv_list] -cf [config_file] -s [output_path] -lp [output_path/same/show] -obj [object_name] -tl [target_list] -del [True/False] -t [test_file_type] -frc [True/False]`
+`actin -h [help] -f [files_list] -i [indices_list] -rv [rv_list] -cf [config_file] -s [output_path] -lp [output_path/same/show] -obj [object_name] -tl [target_list] -del [True/False] -t [test_file_type] -frc [True/False] -sp [True/False]`
 
 
 Arguments:
@@ -66,6 +66,8 @@ Arguments:
 `-t` : Tests the program using the test files. Options are `S2D`, `S1D`, `e2ds`, `s1d`, `adp` or `rdb` to test these type of files.
 
 `-frc` : Use fractional pixels if `True` (default), use integral pixels if `False`. If using `False` and calculating the I_CaII index as given in the original config_lines.txt file ACTIN will simulate the values of 's_raw' from the HARPS pipeline. Note however that this option might induce artificial variations in the indices due to the use of integral pixels in the bandpasses.
+
+`-sp` : If True saves time-series and multi-plots to same directory as `-s`.
 
 #### Important:
 
