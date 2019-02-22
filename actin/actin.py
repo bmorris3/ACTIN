@@ -375,7 +375,7 @@ def main():
 
     parser.add_argument('--frac', '-frc', help='Turns fractional pixel on (True, default) or off (False).', default=True, type=lambda x: (str(x).lower() == 'true'))
 
-    parser.add_argument('--save_plots', '-sp', help='If True, plot time-series.', default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--save_plots', '-sp', help="If True saves time-series and multi-plots to same directory as 'save_output'.", default=False, type=lambda x: (str(x).lower() == 'true'))
 
     #parser.add_argument('--plt_spec', '-pspec', help='Plot full spectrum if True, If int is given plot spectrum in the int order. False is default.', default=False)
 
