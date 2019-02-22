@@ -35,5 +35,5 @@ setup(name = 'actin',
 
 
 # This runs ACTIN from terminal, creates ACTIN directory with config file in Application Support and gives its location
-try: subprocess.call(["actin"])
-except: pass
+#try: subprocess.call(["actin"])
+#except: pass
