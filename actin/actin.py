@@ -35,15 +35,13 @@ import ac_tools
 
 from matplotlib import pylab as plt #####
 
+
 # initiate global variables:
 ac_set.init()
-
 # Configuration file:
-config_file = os.path.join(path, "config_lines.txt")
-
+config_file  = os.path.join(path, "config_lines.txt")
 # Version file:
 version_file = os.path.join(path, "VERSION")
-
 # Print preamble:
 version = ac_set.preamble(version_file)
 
@@ -213,7 +211,6 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
     Runs 'actin_file' function for one or multiple fits files, for one or multiple stars.
     Accepts fits files from HARPS, HARPS-N, and ESPRESSO instruments.
     Accepts files of types: 'S1D', 'S2D', 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
-    Recognizes fits files from HARPS and HARPS-N instruments.
     """
 
     print()
@@ -235,7 +232,7 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
     # test values can be 'S1D', 'S2D', 'e2ds', 's1d', 'adp', or 'rdb'
     # this needs to have before anything that uses 'files'
     if test:
-        calc_index, files = ac_tools.test_actin(test, path)
+        calc_index, files = ac_tools.test_actin(test, path, calc_index)
 
     if not files:
         sys.exit()
@@ -266,9 +263,12 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
     files_list = ac_tools.files_by_star_and_ftype(files)
 
     n_files_t = 0
+    # star directories
     for k in range(len(files_list)):
+        # file types
         for i in range(len(files_list[k])):
             n_files = 0
+            # files organized by dir and file type
             for j in range(len(files_list[k][i])):
                 n_files += 1
                 n_files_t += 1
@@ -286,7 +286,7 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
 
             # POST-PROCESSING:
             if output:
-                # Dictionaries for each file_type
+                # Dictionaries for each file type
                 sel_lines = output['sel_lines']
                 info = output['info']
                 options = output['options']
@@ -382,18 +382,18 @@ def main():
     # read arguments from the command lines
     args = parser.parse_args()
 
-    actin(files=args.files,
-        calc_index=args.calc_index,
-        rv_in=args.rv_in,
-        config_file=args.config_file,
-        save_output=args.save_output,
-        ln_plts=args.ln_plts,
-        obj_name=args.obj_name,
-        targ_list=args.targ_list,
-        del_out=args.del_out,
-        test=args.test,
-        frac=args.frac,
-        save_plots=args.save_plots)
+    actin(files      =args.files,
+          calc_index =args.calc_index,
+          rv_in      =args.rv_in,
+          config_file=args.config_file,
+          save_output=args.save_output,
+          ln_plts    =args.ln_plts,
+          obj_name   =args.obj_name,
+          targ_list  =args.targ_list,
+          del_out    =args.del_out,
+          test       =args.test,
+          frac       =args.frac,
+          save_plots =args.save_plots)
 
 if __name__ == "__main__":
     main()

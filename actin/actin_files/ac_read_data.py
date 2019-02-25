@@ -10,13 +10,14 @@ import numpy as np
 import glob
 
 import astropy.io.fits as pyfits
+import matplotlib.pylab as plt
 
 # ACTIN modules:
 import ac_tools
 import ac_settings as ac_set
 
 
-def check_for_calib_files(e2ds_header, file_type, folder, dif_time_max=1.0):
+def check_for_calib_files(e2ds_header, file_type, folder, dif_time_max=1.0, plot_spec=False):
     """
     Check for calibration files (wave or blaze) in the working directory
     in case of predetermined files are not present and choses the ones with
@@ -142,9 +143,10 @@ def read_data_rdb(file):
     return data
 
 
-def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False):
+def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False, plot_spec=False):
     """
-    force_calc_wave is for testing purposes only.
+    - force_calc_wave is for testing purposes only.
+    - plot_spec is for testing purposes only.
     """
 
     print()
@@ -426,6 +428,19 @@ def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False):
             else:
                 print("*** ERROR: No rv data available to calibrate wavelength.")
                 return
+
+    #plot_spec = True
+    #ord = 69
+    if plot_spec == True:
+        if type(wave[0]) in (list, np.ndarray):
+            plt.plot(wave[ord], flux[ord], 'k-')
+        else:
+            plt.plot(wave, flux, 'k-')
+        plt.axvline(7877.08, c='b',ls='-')
+        plt.xlabel("Wavelength [Ang]")
+        plt.ylabel("Flux")
+        plt.show()
+
 
     data = {}
     data['flux'] = flux

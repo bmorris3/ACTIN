@@ -18,7 +18,7 @@ import ac_settings as ac_set
 
 def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, test_plot=False):
 
-    print("Executing: compute_flux")
+    print("Executing compute_flux")
 
     if blaze is None: blaze = np.ones(len(flux))
 
@@ -26,8 +26,8 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
     px_size = np.diff(wave)
     #px_size = [float(px_size[k]) for k in range(len(px_size))] ####
     #px_size = np.asarray(px_size) ####
-    wave = wave[1:]
-    flux = flux[1:]
+    wave  = wave[1:]
+    flux  = flux[1:]
     blaze = blaze[1:]
 
     # make all values float otherwise python will not detect very small differences between wave and wmin/max
@@ -54,13 +54,13 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
 
     # HARPS METHOD
     if frac == False:
-        flux_win = flux[cond]
-        wave_win = wave[cond]
-        blaze_win = blaze[cond]
+        flux_win     = flux[cond]
+        wave_win     = wave[cond]
+        blaze_win    = blaze[cond]
         flux_win_deb = flux[cond]/blaze[cond]
-        px_size_win = px_size[cond]
-        npixels = len(wave[cond])
-        response = bandfunc[cond]
+        px_size_win  = px_size[cond]
+        npixels      = len(wave[cond])
+        response     = bandfunc[cond]
     # ACTIN METHOD
     if frac == True:
         dwave_l = wave[cond][0]-wmin
@@ -76,10 +76,8 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
         npixels = len(wave[cond]) + frac_l + frac_r
 
         # just for visualization purposes
-        wave_win = np.r_[wave[cond][0]-dwave_l, wave[cond], wave[cond][-1]+dwave_r]
-
-        flux_win = np.r_[flux[cond_l][-1], flux[cond], flux[cond_r][0]]
-
+        wave_win  = np.r_[wave[cond][0]-dwave_l, wave[cond], wave[cond][-1]+dwave_r]
+        flux_win  = np.r_[flux[cond_l][-1], flux[cond], flux[cond_r][0]]
         blaze_win = np.r_[blaze[cond_l][-1], blaze[cond], blaze[cond_r][0]]
 
         px_size_win = np.r_[px_size[cond_l][-1], px_size[cond], px_size[cond_r][0]]
@@ -102,7 +100,7 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
         else: print("*** bandwidth test 2 ERROR")
 
     # Flux sum and variance for line:
-    f_sum = sum(flux_win_deb*response/sum(response*px_size_win))
+    f_sum     = sum(flux_win_deb*response/sum(response*px_size_win))
     f_sum_var = sum((flux_win+noise**2)*response**2/blaze_win**2)/sum(response*px_size_win)**2
 
     print("Pixels in bandpass = %.4f" % npixels)
@@ -113,9 +111,9 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
     # Test plots
     if test_plot == True:
         w_out_l = wave[wave < wave[cond][0]][-1]
-        w_in_l = wave[cond][0]
+        w_in_l  = wave[cond][0]
         w_out_r = wave[wave > wave[cond][-1]][0]
-        w_in_r = wave[cond][-1]
+        w_in_r  = wave[cond][-1]
 
         plt.plot(wave, flux, 'kx')
         plt.plot(wave_win, flux_win*response, 'b.')
@@ -140,14 +138,11 @@ def flag_negflux(flux):
     Tests if flux has negative values and returns flag 'flg' as 'negFlux' if detected, None otherwise, and the fraction of pixels with negative values of flux, 'frac_neg'.
     """
     negflux_array = np.where(flux < 0.0, flux, 0.0)
-    #negflux = sum(negflux_array)
 
     negflux_only = [negflux_array[x] for x in range(len(negflux_array)) if negflux_array[x] < 0.0]
 
     # fraction of pixels with negative flux
     frac_neg = len(negflux_only)/len(flux)
-
-    #frac_neg = sum(abs(negflux))/sum(flux)
 
     flag_array = np.where(flux < 0.0, 'negFlux', None)
 
@@ -182,7 +177,6 @@ def remove_output(files, save_output, targ_list=None):
     for file in files:
         obj_list.append(get_target(file))
     objs = list(set(obj_list))
-
 
     for obj in objs:
         for rdb_file in rdb_files:
@@ -232,20 +226,20 @@ def files_by_star_and_ftype(files):
 
 
 def override_obj(obj, obj_name):
-    # Override object name with name given in obj_name option
+    """
+    Override object name with name given in obj_name option.
+    """
     if type(obj_name) is list and len(obj_name) == 1:
         return obj_name[0]
     elif type(obj_name) is list and len(obj_name) > 1:
-        print("*** ERROR: obj_name requires only one name, more than one given")
-        return
+        sys.exit("*** ERROR: obj_name requires only one name, more than one given.")
     else: return obj_name
 
 
 def check_files(files):
     for k in range(len(files)):
         if not os.path.isfile(files[k]):
-            print("*** ERROR: File {} not found.".format(files[k]))
-            sys.exit()
+            sys.exit("*** ERROR: File {} not found.".format(files[k]))
 
 
 def get_file_type(file):
@@ -274,7 +268,6 @@ def get_target(fits_file):
     """
     Returns the object targeted in the fits file 'fits_file'.
     """
-
     hdu = pyfits.open(fits_file)
 
     try:
@@ -299,9 +292,7 @@ def check_targ(fits_file, targets):
     """
     Checks if a fits file belongs to a target in a list of targets.
     """
-
     print("Executing: check_targ")
-
     print("Targets = {}".format(targets))
 
     obj = get_target(fits_file)
@@ -314,8 +305,9 @@ def check_targ(fits_file, targets):
         return False
 
 
-def test_actin(test, path):
-    calc_index = ("I_CaII", "I_Ha", "I_NaI")
+def test_actin(test, path, calc_index):
+    if not calc_index:
+        calc_index = ("I_CaII", "I_Ha", "I_NaI")
     if test == "S1D":
         files = os.path.join(path, "test_files", "HD41248_1_1_S1D_A.fits")
     elif test == "S2D":
@@ -331,16 +323,17 @@ def test_actin(test, path):
     else:
         print("*** ERROR:")
         print("*** Test can only be 'S1D', 'S2D', 'e2ds', 's1d', 'adp', or 'rdb'")
+        return
     return calc_index, files
 
 
 def read_rdb(filename):
     """
     Reads an .rdb file and returns a dictionary with the headers as keys and data as lists ('output'), and also a list of headers ('keys').
-    """
-    # use: table = pyrdb.read_rdb(file)[0] for data
-    # use: table = pyrdb.read_rdb(file)[1] to get the keys by order
 
+    use: table = pyrdb.read_rdb(file)[0] for data
+    use: table = pyrdb.read_rdb(file)[1] to get the keys by order
+    """
     f = open(filename, 'r')
     data = f.readlines()
     f.close()
@@ -363,7 +356,6 @@ def save_rdb(dic, keys,file):
     """
     From a disctionary 'dic' saves the columns related to the specified 'keys' into an .rdb file named 'file'.
     """
-
     out = open(file,'w')
     n_keys = len(keys)
 
@@ -388,7 +380,6 @@ def add_rdb(dic,keys, file_name):
     """
     Adds data to an existing .rdb file. The 'keys' must match the headers already present in the file.
     """
-
     out = open(file_name,'a')
     n_keys = len(keys)
     for i in range(len(dic[keys[0]])):
@@ -403,7 +394,6 @@ def plot_params(width=6, height=3.5):
         """
         Parameters for plots.
         """
-
         rcdefaults()
         rc('axes', linewidth=1)
         rc('lines', markeredgewidth=0.5)
