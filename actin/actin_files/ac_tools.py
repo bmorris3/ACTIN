@@ -100,6 +100,8 @@ def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, 
         else: print("*** bandwidth test 2 ERROR")
 
     # Flux sum and variance for line:
+
+    if not noise: noise = 0.0
     f_sum     = sum(flux_win_deb*response/sum(response*px_size_win))
     f_sum_var = sum((flux_win+noise**2)*response**2/blaze_win**2)/sum(response*px_size_win)**2
 

@@ -51,7 +51,7 @@ def init():
 
 def preamble(version_file):
 
-    __author__ = "João Gomes da Silva"
+    __author__ = "Joao Gomes da Silva"
 
     try:
         with open(version_file, 'r') as file:
@@ -61,8 +61,8 @@ def preamble(version_file):
         print("*** WARNING | Unable to read 'VERSION' file.")
         version = "Unknown"
 
-    print("Instituto de Astrofísica e Ciências do Espaço")
-    print("Centro de Astrofísica da Universidade do Porto")
+    print("Instituto de Astrofisica e Ciencias do Espaco")
+    print("Centro de Astrofisica da Universidade do Porto")
     print("Author:", __author__+ ",", "Joao.Silva@astro.up.pt")
     #print("Contact: Joao.Silva@astro.up.pt")
 

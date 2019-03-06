@@ -243,7 +243,7 @@ def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln
     if rv_in is None:
         rv_in = [rv_in]*len(files)
     elif type(rv_in) is not list:
-        rv_in = [rv_in]
+        rv_in = [float(rv_in)] ### added float to use as module
     else: pass
 
     # Check if files exist

@@ -45,7 +45,12 @@ def check_duplicate(obj, date, instr, file_type, out_dir):
     pfile_name = os.path.join(out_dir, obj, file_name)
 
     if os.path.isfile(pfile_name):
-        rdb_data = ac_tools.read_rdb(pfile_name)[0]
+        try:
+            rdb_data = ac_tools.read_rdb(pfile_name)[0]
+        except:
+            print("*** ERROR: Cannot read rdb file:")
+            print(pfile_name)
+            sys.exit()
         if date in rdb_data['obs_date']:
             print("Date {} already saved in:".format(date))
             print(pfile_name)

@@ -1,4 +1,4 @@
-# ACTIN 1.3
+# ACTIN 1.3.1
 
 ### Activity Indices Calculator
 
@@ -89,9 +89,50 @@ The example below will test the code using the test files provided in the packag
 
 This will execute ACTIN for all the subdirectories inside `../fits/` with files ending with `e2ds_A.fits`, calculate the indices `I_CaII` and `I_Ha`, output the data to `../output/star_names`, and, before running the code, delete any output file that was previously there, in this case `Gl273_HARPS_e2ds_data.rdb` and `Gl581_HARPS_e2ds_actin.rdb`. Only fits files belonging to the stars chosen in `-tl` will be read, in this case `Gl273` and `Gl581`. Since `-frc` is True by default, fractional pixels will be used to compute the indices.
 
+
+### Output rdb table:
+
+The output rdb file has headers with data from the headers of the files (data headers) and data calculated by ACTIN (index headers).
+
+#### Data headers:
+
+Some of these headers might not be available if CCF files are not provided.
+
+`obj` : Object targeted
+`instr` : Instrument used
+`obs_date` : Observation date
+`bjd` : Barycentric Julian Date [days]
+`rv` : Radial Velocity [m/s]
+`rv_err` : Error of `rv` [m/s]
+`fwhm` : Fullwidth-at-Half-Maximum of CCF profile [m/s]
+`fwhm_err` : Error of `fwhm` [m/s]
+`cont` : Contrast of CCF profile [%]
+`cont_err` : Error of `cont` [%]
+`bis` : Bisector inverse span of the CCF profile [m/s]
+`bis_err` : Error of `bis` [m/s]
+`noise` : CCF noise [m/s]
+`median_snr` : Median signal-to-noise of spectrum
+`data_flg` : Flag indicating if spectrum was not deblazed as ´noDeblazed´
+`bv` : B-V colour
+`airmass_end` : Airmass at end of measurement
+
+#### Index headers:
+
+These headers depend on the choices of indices to calculate.
+`<ind_id>` is the identification of the index as in the configuration file.
+`<ln_id>` is the identification of the line as in the configuration file.
+
+`I_<ind_id>` : Value of the index <index_id>
+`I_<ind_id>_err` : Error of index
+`I_<ind_id>_snr` : Median signal-to-noise ratio of the orders used to calculate the index
+`I_<ind_id>_flg` : Flag with value `negFlux` if negative values of flux found in the bandpasses of the index
+`I_<ind_id>_mfracneg` : Maximum fraction of pixels with negative flux found in the bandpasses of the index
+`<ln_id>_npixels` : Number of pixels inside the bandpass associated with the line <ind_ln>.
+
 ---
 
-(*) For OSX: `~/Library/Application Support/<AppName>`
+(*)
+For OSX: `~/Library/Application Support/<AppName>`
 
 For Windows: `C:\Documents and Settings\<User>\Application Data\Local Settings\<AppAuthor>\<AppName>` or possibly `C:\Documents and Settings\<User>\Application Data\<AppAuthor>\<AppName>`
 
@@ -99,4 +140,4 @@ For Linux: `~/.local/share/<AppName>`
 
 ---
 
-For issues, problems, support or if you would like to contribute to the development of this code please contact Joao.Silva(at)astro.up.pt
+For issues, problems, support or if you would like to contribute to the development of this code contact Joao.Silva(at)astro.up.pt

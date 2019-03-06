@@ -5,7 +5,7 @@ from __future__ import print_function
 from __future__ import division
 
 import os, sys
-
+import codecs
 
 def read_conf(config_file, calc_index):
     """
@@ -52,7 +52,7 @@ def read_conf(config_file, calc_index):
     print("-----------------------------")
 
     try:
-        f = open(config_file, 'r')
+        f = codecs.open(config_file, 'r', encoding="utf-8")
     except FileNotFoundError as fnf_err:
         print("*** ERROR: Config file not found:")
         print(fnf_err)

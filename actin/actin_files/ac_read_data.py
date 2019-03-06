@@ -429,16 +429,27 @@ def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False, plot_spec
                 print("*** ERROR: No rv data available to calibrate wavelength.")
                 return
 
-    #plot_spec = True
-    #ord = 69
+    # Test plot
+    plot_spec = False
+
     if plot_spec == True:
+        ord = 6
+        dif_wave = np.diff(wave_raw)
+        wave = wave_raw[1:]
         if type(wave[0]) in (list, np.ndarray):
-            plt.plot(wave[ord], flux[ord], 'k-')
+            wave = wave[ord]
+            plt.xlabel("Wave_raw ord {} [Ang]".format(ord))
+            plt.ylabel("diff_wave_raw ord {} [Ang]".format(ord))
         else:
-            plt.plot(wave, flux, 'k-')
-        plt.axvline(7877.08, c='b',ls='-')
-        plt.xlabel("Wavelength [Ang]")
-        plt.ylabel("Flux")
+            plt.xlabel("Wave_raw [Ang]")
+            plt.ylabel("diff_wave_raw")
+
+        dif_wave = np.diff(wave)
+        wave = wave[1:]
+
+        plt.plot(wave, dif_wave, 'k.')
+
+        #plt.axvline(7877.08, c='b',ls='-')
         plt.show()
 
 
