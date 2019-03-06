@@ -49,87 +49,10 @@ version = ac_set.preamble(version_file)
 def actin_file(file, calc_index=None, rv_in=None, config_file=config_file, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True):
     """
     Runs ACTIN for one fits file.
-    Accepts files of types: 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
-    Recognizes fits files from HARPS and HARPS-N instruments.
-
-    Parameters:
-    -----------
-    The same as the actin function below but for one file.
-
-    Returns:
-    --------
-    data : dict
-        Dictionary with data returned from fits files.
-
-        Each key is a list with data related to a given measurement date
-        given by the key 'date'.
-
-        The used keys are:
-
-        ==========  ========================================================
-        keys        Description
-        ----------  --------------------------------------------------------
-        obj         str : Object (target) identification.
-        flux        list : Flux per spectral order per pixel (e2ds) or flux
-                    per pixel (other file types).
-        wave        list : Wavelength per spectral order per pixel (e2ds) or
-                    wavelength per pixel (other file types) [angstroms].
-        blaze       list : Blaze function per spectral order (e2ds).
-                    If blaze file is not found is list of 'ones'. For other
-                    file types this header is not used.
-        snr         {list, None} : SNR per spectral order. None if 'rdb'.
-        median_snr  float : Median SNR of spectrum.
-        date         str : Date of observation in the fits file format.
-        bjd         float : Barycentric Julian date of observation [days].
-        rv            float : Radial velocity [m/s] (if CCF file available).
-        rv_err        float : Error on radial velocity (photon noise) [m/s]
-                    (if CCF file available).
-        fwhm        float : Full-Width-at-Half-Maximum of the CCF line
-                    profile [m/s] (if CCF file available).
-        cont        float : Contrast of the CCF line profile [%] (if CCF
-                    file available).
-        bis            float : Bisector Inverse Span of the CCF line profile
-                    [m/s] (if BIS file available).
-        noise        float : CCF noise [m/s] (if CCF file available).
-        instr       str : Instrument identification.
-        data_flg     str : Flag with value 'noDeblazed' when the blaze file
-                    was not found (and flux_deb is real flux), None
-                    otherwise.
-        file_type   str : Type of file used as input: 'e2ds', 's1d'
-                    (includes 's1d_*_rv'), 'ADP' or 'rdb'.
-        ==========  ========================================================
-
-    index : dict
-        Dictionary containing the parameters related to the calculated spectral
-        indices.
-
-        Each key entry is a list of parameters where the list indices form the
-        rows related to a given spectral index identified by the key 'index'.
-
-        The returned keys are:
-
-        ==========  ========================================================
-        keys        Description
-        ----------  --------------------------------------------------------
-        index         str : Identification of the spectral index as given in
-                    the configuration file.
-        value         float : Spectral index value.
-        error         float : Error of the index calculated by error propa-
-                    gation.
-        snr         {float, None} : Mean of the SNR at the lines spectral
-                    order if the SNR per order was given as input, median
-                    SNR of spectrum if median SNR given as input, 'None' if
-                    no SNR values given as input.
-        flg         {str, None} : Flags associated with the index: 'negFlux'
-                    if negative flux detected in any of the lines used to
-                    compute the index, None otherwise.
-        mfrac_neg    list : Maximum fraction of flux with negative values
-                    when taking into account all lines for a given index.
-        ==========  ========================================================
-
-    save_name : str
-        Output rdb filename with path.
+    Accepts files of types: 'S2D', 'S1D', 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
+    Recognizes fits files from HARPS, HARPS-N and ESPRESSO instruments.
     """
+    
     print()
     print("--------------------")
     print("EXECUTING ACTIN_FILE")
@@ -377,7 +300,6 @@ def main():
 
     parser.add_argument('--save_plots', '-sp', help="If True saves time-series and multi-plots to same directory as 'save_output'.", default=False, type=lambda x: (str(x).lower() == 'true'))
 
-    #parser.add_argument('--plt_spec', '-pspec', help='Plot full spectrum if True, If int is given plot spectrum in the int order. False is default.', default=False)
 
     # read arguments from the command lines
     args = parser.parse_args()

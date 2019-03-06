@@ -17,33 +17,6 @@ def check_lines(wave, sel_lines):
     Tests if the selected lines from config file fit inside the spectrograph
     wavelength range and fit inside any spectral orders for the case of 2d
     spectrum.
-
-    Parameters:
-    -----------
-    wave : list of floats (1d) or list of lists of floats (2d)
-        Wavelength in 1d or 2d format [angstrom].
-    sel_lines : dict
-        Dictionary containing the identification of the indices selected and
-        the parameters of the spectral lines required for each index.
-
-        Each key entry is a list of parameters where the list indices form the
-        rows related to the same spectral line identified with the key 'ln_id'
-        which is related to the spectral index identified by 'ind_id'.
-
-        The used keys are:
-
-        ==========  ========================================================
-        keys        Description
-        ----------  --------------------------------------------------------
-        ln_id        str : Spectral line identification.
-        ln_ctr         float : Wavelength of the line centre [angstrom].
-        ln_win         float : Bandwidth around the line centre to be used in
-                    the flux integration [angstrom].
-        ==========  ========================================================
-
-    Returns
-    -------
-    exit() if test fails.
     """
 
     print("\nCHECKING LINES FOR WAVELENGTH RANGE AND SP. ORDERS")
@@ -117,13 +90,13 @@ def calc_flux_lines(data, sel_lines, ln_plts=False, frac=True):
         ==========  ========================================================
         keys        Description
         ----------  --------------------------------------------------------
-        flux         list of lists : Flux per pixel per order.
-        wave         list of lists : Wavelength calibrated for BERV and RV
+        flux        list of lists : Flux per pixel per order.
+        wave        list of lists : Wavelength calibrated for BERV and RV
                     (at rest frame) per pixel per order [angstroms].
-        blaze        list of lists : Blaze function.
+        blaze       list of lists : Blaze function.
         snr         list : SNR at each spectral order.
         obj         str : Object identification.
-        date         str : Date of observation in the fits file format.
+        date        str : Date of observation in the fits file format.
         ==========  ========================================================
 
     sel_lines : dict
@@ -135,26 +108,22 @@ def calc_flux_lines(data, sel_lines, ln_plts=False, frac=True):
         ==========  ========================================================
         keys        Description
         ----------  --------------------------------------------------------
-        ind_id        str : Index identification.
-        ind_var        str : Variable assigned to a given line to be used in
+        ind_id      str : Index identification.
+        ind_var     str : Variable assigned to a given line to be used in
                     the index equation. Ex: 'L1', 'L2', etc, for the core
                     lines, and 'R1', 'R2', etc, for reference lines.
-        ln_id        str : Spectral line identification.
-        ln_ctr         float : Wavelength of the line centre [angstroms].
-        ln_win         float : Bandpass around the line centre to be used in
+        ln_id       str : Spectral line identification.
+        ln_ctr      float : Wavelength of the line centre [angstroms].
+        ln_win      float : Bandpass around the line centre to be used in
                     the flux integration [angstroms].
-        bandtype    str : Bandpass type to integrate flux.
+        bandtype    str : Type of bandpass used to integrate flux.
         ==========  ========================================================
 
-    save_plot : {str, False} (optional)
+    ln_plts : {str, False} (optional)
         Path for the saved line plots. If False, the plots are not saved
         (default).
-    weight : {str, None} (optional)
-        Function to weight the integrated flux. If 'blaze' the flux is multiplied by the blaze function, if None (default) the flux is not weighted (default).
     frac : bool (optional)
         Use fractional pixels if 'True' (default), use integral pixels if 'False'.
-    norm : str (optional)
-        Normalisation of the flux: if 'band' the sum is normalised by the bandpass wavelength value in angstroms, if 'npixels' by the number of pixels in the bandpass (default), if 'weight' by the sum of the weight function inside the bandpass, if None the integrated flux is not normalised.
 
     Returns:
     --------
@@ -170,11 +139,13 @@ def calc_flux_lines(data, sel_lines, ln_plts=False, frac=True):
         keys        Description
         ----------  --------------------------------------------------------
         flux        list : Integrated flux for each line.
-        error        list : Errors on integrated flux for each line.
-        snr            list : SNR for each line.
-        flg            list : Flag for each line.
+        error       list : Errors on integrated flux for each line.
+        snr         list : SNR for each line.
+        flg         list : Flag for each line, 'negFlux' if negative flux
+                    found inside any bandpass.
         frac_neg    list : Fraction of pixels with negative values of flux
                     for each line.
+        npixels     float : Number of pixels inside the bandpass.
         ==========  ========================================================
     """
 
@@ -241,17 +212,19 @@ def calc_ind(sel_lines):
         ==========  ========================================================
         keys        Description
         ----------  --------------------------------------------------------
-        ind_id        str : Index identification.
-        ind_var        str : Variable assigned to a given line to be used in
+        ind_id      str : Index identification.
+        ind_var     str : Variable assigned to a given line to be used in
                     the index equation. Ex: 'L1', 'L2', etc, for the core
                     lines, and 'R1', 'R2', etc, for reference lines.
-        ln_id        str : Spectral line identification.
+        ln_id       str : Spectral line identification.
         flux        list : Integrated flux for each line.
-        error        list : Errors on integrated flux for each line.
-        snr            list : SNR for each line.
-        flg            list : Flag for each line.
+        error       list : Errors on integrated flux for each line.
+        snr         list : SNR for each line.
+        flg         list : Flag for each line, 'negFlux' if negative flux
+                    found inside any bandpass.
         frac_neg    list : Fraction of pixels with negative values of flux
                     for each line.
+        npixels     float : Number of pixels inside the bandpass.
         ==========  ========================================================
 
     Returns:
@@ -265,14 +238,16 @@ def calc_ind(sel_lines):
         ==========  ========================================================
         keys        Description
         ----------  --------------------------------------------------------
-        index        str : Index identification.
-        value        float : Index value.
-        error        float : Index error.
-        flg            {str, None} : Index flag.
-        mfrac_neg    float : Maximum fraction of pixels with negative values
+        index       str : Index identification.
+        value       float : Index value.
+        error       float : Index error.
+        flg         {str, None} : Index flag, 'negFlux' if negative flux
+                    found inside any bandpass.
+        mfrac_neg   float : Maximum fraction of pixels with negative values
                     of flux taking into account all lines used to compute
                     index.
-        snr            float : Mean SNR of all lines used to compute index.
+        snr         float : Mean SNR of all lines used to compute index.
+        npixels     float : Number of pixels inside the bandpass.
         ==========  ========================================================
     """
 

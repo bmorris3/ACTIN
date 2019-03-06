@@ -64,6 +64,5 @@ def preamble(version_file):
     print("Instituto de Astrofisica e Ciencias do Espaco")
     print("Centro de Astrofisica da Universidade do Porto")
     print("Author:", __author__+ ",", "Joao.Silva@astro.up.pt")
-    #print("Contact: Joao.Silva@astro.up.pt")
 
     return version

@@ -26,7 +26,7 @@ def check_duplicate(obj, date, instr, file_type, out_dir):
     date : str
         Date of observation in the fits file format.
     file_type : str
-        Type of file used: 'e2ds', 's1d', 'ADP', or 'rdb'.
+        Type of file used: 'S2D', 'S1D', 'e2ds', 's1d', 'ADP', or 'rdb'.
     output_dir : str
         Directory of output file.
 
@@ -66,76 +66,7 @@ def check_duplicate(obj, date, instr, file_type, out_dir):
 def save_data(data, index, out_dir):
     """
     Saves output data to rdb file.
-
-    Parameters:
-    -----------
-    data : dict
-        Dictionary with data returned from fits files.
-
-        Each key is a list with data related to a given measurement date
-        given by the key 'date'.
-
-        The used keys are:
-
-        ==========  ========================================================
-        keys        Description
-        ----------  --------------------------------------------------------
-        obj         str : Object (target) identification.
-        median_snr  float : Median SNR of spectrum.
-        date         str : Date of observation in the fits file format.
-        bjd         float : Barycentric Julian date of observation [days].
-        rv            float : Radial velocity [m/s] (if CCF file available).
-        rv_err        float : Error on radial velocity (photon noise) [m/s]
-                    (if CCF file available).
-        fwhm        float : Full-Width-at-Half-Maximum of the CCF line
-                    profile [m/s] (if CCF file available).
-        cont        float : Contrast of the CCF line profile [%] (if CCF
-                    file available).
-        bis            float : Bisector Inverse Span of the CCF line profile
-                    [m/s] (if BIS file available).
-        noise        float : CCF noise [m/s] (if CCF file available).
-        data_flg     str : Flag with value 'noDeblazed' when the blaze file
-                    was not found (and flux_deb is real flux), None
-                    otherwise.
-        ==========  ========================================================
-
-    index : dict
-        Dictionary containing the parameters related to the calculated spectral
-        indices.
-
-        Each key entry is a list of parameters where the list indices form the
-        rows related to a given spectral index identified by the key 'index'.
-
-        The returned keys are:
-
-        ==========  ========================================================
-        keys        Description
-        ----------  --------------------------------------------------------
-        index         str : Identification of the spectral index as given in
-                    the configuration file.
-        value         float : Spectral index value.
-        error         float : Error of the index calculated by error propa-
-                    gation.
-        snr         {float, None} : Mean of the SNR at the lines spectral
-                    order if the SNR per order was given as input, median
-                    SNR of spectrum if median SNR given as input, 'None' if
-                    no SNR values given as input.
-        flg         {str, None} : Flags associated with the index: 'negFlux'
-                    if negative flux detected in any of the lines used to
-                    compute the index, None otherwise.
-        mfrac_neg    list : Maximum fraction of flux with negative values
-                    when taking into account all lines for a given index.
-        ==========  ========================================================
-
-    output_dir : str
-        Directory of the saved rdb file.
-
-    Returns:
-    --------
-    Saves output to .rdb file with name and path given by 'save_name'.
-
-    save_name : str
-        Output filename with path.
+    For a description of the returned headers see README.md file.
     """
 
     print()

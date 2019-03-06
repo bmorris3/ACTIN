@@ -96,11 +96,10 @@ def line_plot(data, ord, ln_id, ln_ctr, ln_win, bandfunc, bandtype, out_dir):
         Spectral line identification.
     ln_ctr, ln_win : float
         Spectral line centre and bandpass [angstroms].
-    bandfunc : {list, None}
-        Bandpass function, None if using a square function, list if using triangular.
+    bandfunc : list
+        Bandpass function.
     file_type : str
-        Identification of the type of file used. Options are 'e2ds', 's1d',
-        'ADP', and 'rdb'.
+        Identification of the type of file used. Options are 'S2D', 'S1D', 'e2ds', 's1d', 'ADP', and 'rdb'.
     out_dir : str
         Output directory to save the plots.
 
@@ -239,6 +238,9 @@ def line_plot(data, ord, ln_id, ln_ctr, ln_win, bandfunc, bandtype, out_dir):
 
 
 def get_win(data, ln_id, ln_ctr, ln_win, bandtype, blaze=None, err=None, frac=True, ln_plts=False):
+    """
+    Calculate the flux for each line.
+    """
 
     file_type  = data['file_type']
     wave       = data['wave']

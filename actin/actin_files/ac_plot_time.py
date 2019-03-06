@@ -17,22 +17,6 @@ def plt_time(info, out_dir, save_plt=False, rmv_flgs=False):
     """
     Saves timeseries plots of the indices identified in the rdb file by
     starting with 'I_'.
-
-    Parameters:
-    -----------
-    rdb_file : str
-        Output rdb file from ACTIN with path.
-    save_plt : bool (optional)
-        If True the plots are saved in the same directory of 'rdb_file',
-        if False the plots are not saved (default).
-    rmv_flgs : bool (optional)
-        If True, removes values with negative flux flags, if False the
-        these values are included with red colour (default).
-
-    Returns:
-    --------
-    Timeseries plots of the indices selected to be calculated by ACTIN.
-    Output directory is the same as the one the rdb file is located.
     """
 
     if out_dir is False: return
@@ -121,26 +105,6 @@ def plt_time_mlty(info, out_dir, save_plt=False, rmv_flgs=False, hdrs=['I_CaII',
     """
     Saves timeseries plots of the indices identified in the rdb file by
     starting with 'I_' in a 'multi-plot' format.
-
-    Parameters:
-    -----------
-    rdb_file : str
-        Output rdb file from ACTIN with path.
-    save_plt : bool (optional)
-        If True the plots are saved in the same directory of 'rdb_file',
-        if False the plots are not saved (default).
-    rmv_flgs : bool (optional)
-        If True, removes values with negative flux flags, if False the
-        these values are included with red colour (default).
-    hdrs : list
-        List of indices to be plotted. If the rdb does not include any
-        index in this list, plot is not saved. If only one index is found
-        in the rdb file, plot is not saved.
-
-    Returns:
-    --------
-    Timeseries multi-plot of the indices selected to be calculated by ACTIN.
-    Output directory is the same as the one the rdb file is located.
     """
 
     if not out_dir: return

@@ -145,6 +145,7 @@ def read_data_rdb(file):
 
 def read_data(pfile, rv_in=None, obj_name=None, force_calc_wave=False, plot_spec=False):
     """
+    Reads data from 'S2D', 'S1D', 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb' files.
     - force_calc_wave is for testing purposes only.
     - plot_spec is for testing purposes only.
     """

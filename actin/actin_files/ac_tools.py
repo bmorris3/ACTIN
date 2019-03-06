@@ -17,6 +17,9 @@ import ac_settings as ac_set
 
 
 def compute_flux(wave, flux, blaze, noise, ln_ctr, ln_win, bandtype, frac=True, test_plot=False):
+    """
+    Calculates the flux inside a bandpass.
+    """
 
     print("Executing compute_flux")
 

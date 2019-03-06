@@ -43,7 +43,7 @@ def read_conf(config_file, calc_index):
     	ln_ctr 		float : Wavelength of the line centre [angstroms].
     	ln_win 		float : Bandpass around the line centre to be used in
     				the flux integration [angstroms].
-        bandtype    str : Bandpass type to integrate flux.
+        bandtype    str : Type of bandpass used to integrate flux.
     	==========  ========================================================
     """
 
