@@ -163,4 +163,4 @@ For Linux: `~/.local/share/<AppName>`
 
 ---
 
-For issues, problems, support or if you would like to contribute to the development of this code contact Joao.Silva(at)astro.up.pt
+For issues, bugs or if you would like to contribute to the development of this code contact Joao.Silva(at)astro.up.pt
