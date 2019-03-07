@@ -42,7 +42,7 @@ from matplotlib import pylab as plt #####
 # initiate global variables:
 ac_set.init()
 # Configuration file:
-config_file  = os.path.join(path, "config_lines.txt")
+config_file = os.path.join(path, "config_lines.txt")
 # Version file:
 version_file = os.path.join(path, "VERSION")
 # Print preamble:
@@ -111,28 +111,28 @@ def actin_file(file, calc_index=None, rv_in=None, config_file=config_file, save_
 
     info = {}
     info['config_file'] = config_file
-    info['file_type'] = data['file_type']
-    info['version'] = version
+    info['file_type']   = data['file_type']
+    info['version']     = version
     info['source_path'] = os.path.split(file)[0]
-    info['tel'] = data['tel']
-    info['instr'] = data['instr']
-    info['obj'] = data['obj']
+    info['tel']         = data['tel']
+    info['instr']       = data['instr']
+    info['obj']         = data['obj']
 
     options = {}
     options['frac'] = frac
 
     output = {}
-    output['data'] = data
-    output['index'] = index
+    output['data']      = data
+    output['index']     = index
     output['sel_lines'] = sel_lines
-    output['info'] = info
-    output['options'] = options
-    output['rdb_file'] = rdb_file
+    output['info']      = info
+    output['options']   = options
+    output['rdb_file']  = rdb_file
 
     return output
 
 
-def actin(files, calc_index, rv_in=None, config_file=None, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True, test=False, save_plots=False):
+def actin(files, calc_index=None, rv_in=None, config_file=None, save_output=False, ln_plts=False, obj_name=None, targ_list=None, del_out=False, frac=True, test=False, save_plots=False):
     """
     Runs 'actin_file' function for one or multiple fits files, for one or multiple stars.
     Accepts fits files from HARPS, HARPS-N, and ESPRESSO instruments.
@@ -307,18 +307,18 @@ def main():
     # read arguments from the command lines
     args = parser.parse_args()
 
-    actin(files      =args.files,
-          calc_index =args.calc_index,
-          rv_in      =args.rv_in,
-          config_file=args.config_file,
-          save_output=args.save_output,
-          ln_plts    =args.ln_plts,
-          obj_name   =args.obj_name,
-          targ_list  =args.targ_list,
-          del_out    =args.del_out,
-          test       =args.test,
-          frac       =args.frac,
-          save_plots =args.save_plots)
+    actin(files       = args.files,
+          calc_index  = args.calc_index,
+          rv_in       = args.rv_in,
+          config_file = args.config_file,
+          save_output = args.save_output,
+          ln_plts     = args.ln_plts,
+          obj_name    = args.obj_name,
+          targ_list   = args.targ_list,
+          del_out     = args.del_out,
+          test        = args.test,
+          frac        = args.frac,
+          save_plots  = args.save_plots)
 
 if __name__ == "__main__":
     main()
