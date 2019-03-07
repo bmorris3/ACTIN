@@ -20,11 +20,14 @@ import appdirs
 path = os.path.dirname(os.path.realpath(__file__))
 
 # Global variables
-import ac_settings as ac_set
+#import ac_settings as ac_set
 
 # Location of ACTIN files:
 actin_files_dir = os.path.join(path, "actin_files")
 sys.path.append(actin_files_dir)
+# Global variables
+import ac_settings as ac_set
+
 import ac_config
 import ac_read_data
 import ac_get_win
@@ -52,7 +55,7 @@ def actin_file(file, calc_index=None, rv_in=None, config_file=config_file, save_
     Accepts files of types: 'S2D', 'S1D', 'e2ds', 's1d', 's1d_*_rv', 'ADP', and 'rdb'.
     Recognizes fits files from HARPS, HARPS-N and ESPRESSO instruments.
     """
-    
+
     print()
     print("--------------------")
     print("EXECUTING ACTIN_FILE")
